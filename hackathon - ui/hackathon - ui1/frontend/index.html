@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediScan AI · Medical Diagnosis Platform</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .disease-card {
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+        }
+        .disease-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-color: var(--secondary);
+        }
+        .disease-card::after {
+            content: "→";
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            opacity: 0;
+            transition: opacity 0.2s;
+            color: var(--secondary);
+            font-size: 18px;
+        }
+        .disease-card:hover::after {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <span class="logo-icon">⚕️</span>
+                <span>MediScan</span>
+                <span class="logo-badge">AI</span>
+            </div>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#diseases">Diseases</a>
+                <a href="#how-it-works">How it Works</a>
+                <a href="#about">About</a>
+            </div>
+            <!-- REMOVED: Login/Register buttons -->
+            <div class="nav-buttons">
+                <!-- Buttons removed -->
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1>AI-Powered Medical <span class="gradient-text">Diagnosis</span></h1>
+                <p>Advanced deep learning models for rapid and accurate disease detection from medical images. Trusted by healthcare professionals worldwide.</p>
+                <div class="hero-buttons">
+                    <a href="dashboard.html" class="btn btn-primary btn-large">Get Started</a>
+                    <a href="#features" class="btn btn-outline btn-large">Learn More</a>
+                </div>
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="stat-number">98.5%</span>
+                        <span class="stat-label">Accuracy</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">50K+</span>
+                        <span class="stat-label">Analyses</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">15+</span>
+                        <span class="stat-label">Conditions</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="hero-placeholder">📊 Dashboard Preview</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Why Choose MediScan AI</h2>
+                <p>Cutting-edge technology meets medical expertise</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🧠</div>
+                    <h3>Multiple AI Models</h3>
+                    <p>Ensemble of DenseNet, ResNet, VGG16, and MobileNet for robust predictions</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>HIPAA Compliant</h3>
+                    <p>End-to-end encryption and secure data handling</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Real-time Analysis</h3>
+                    <p>Get results in seconds with our optimized inference pipeline</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Detailed Reports</h3>
+                    <p>Comprehensive analysis with confidence scores and visualizations</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Diseases Grid -->
+    <section id="diseases" class="diseases">
+        <div class="container">
+            <div class="section-header">
+                <h2>Diseases We Detect</h2>
+                <p>Comprehensive coverage of medical conditions</p>
+            </div>
+            <div class="diseases-grid">
+                <div class="disease-card" data-disease="brain">
+                    <span class="disease-icon">🧠</span>
+                    <h4>Brain Tumor</h4>
+                    <p>MRI analysis for tumor detection</p>
+                    <span class="model-badge">ResNet-50</span>
+                </div>
+                <div class="disease-card" data-disease="chest">
+                    <span class="disease-icon">🫁</span>
+                    <h4>Chest X-Ray</h4>
+                    <p>General chest abnormalities</p>
+                    <span class="model-badge">DenseNet</span>
+                </div>
+                <div class="disease-card" data-disease="pneumonia">
+                    <span class="disease-icon">🌬️</span>
+                    <h4>Pneumonia</h4>
+                    <p>Bacterial & viral pneumonia</p>
+                    <span class="model-badge">ResNet-50</span>
+                </div>
+                <div class="disease-card" data-disease="covid">
+                    <span class="disease-icon">🦠</span>
+                    <h4>COVID-19</h4>
+                    <p>COVID detection from X-rays</p>
+                    <span class="model-badge">VGG16</span>
+                </div>
+                <div class="disease-card" data-disease="breast">
+                    <span class="disease-icon">🎗️</span>
+                    <h4>Breast Cancer</h4>
+                    <p>Mammogram analysis</p>
+                    <span class="model-badge">MobileNet</span>
+                </div>
+                <div class="disease-card" data-disease="retinopathy">
+                    <span class="disease-icon">👁️</span>
+                    <h4>Diabetic Retinopathy</h4>
+                    <p>Retinal fundus analysis</p>
+                    <span class="model-badge">DenseNet</span>
+                </div>
+                <div class="disease-card" data-disease="skin">
+                    <span class="disease-icon">🔬</span>
+                    <h4>Skin Cancer</h4>
+                    <p>Lesion classification</p>
+                    <span class="model-badge">Ensemble</span>
+                </div>
+                <div class="disease-card" data-disease="bone">
+                    <span class="disease-icon">🦴</span>
+                    <h4>Bone Fracture</h4>
+                    <p>Fracture detection</p>
+                    <span class="model-badge">ResNet-50</span>
+                </div>
+                <div class="disease-card" data-disease="liver">
+                    <span class="disease-icon">🧬</span>
+                    <h4>Liver Disease</h4>
+                    <p>CT scan analysis</p>
+                    <span class="model-badge">VGG16</span>
+                </div>
+                <div class="disease-card" data-disease="kidney">
+                    <span class="disease-icon">🔴</span>
+                    <h4>Kidney Stone</h4>
+                    <p>CT urography</p>
+                    <span class="model-badge">MobileNet</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section id="how-it-works" class="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <h2>How It Works</h2>
+                <p>Simple three-step process</p>
+            </div>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Upload Image</h3>
+                    <p>Select the medical image type and upload your scan</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>AI Analysis</h3>
+                    <p>Our ensemble models process and analyze the image</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Get Report</h3>
+                    <p>Receive detailed diagnosis with confidence scores</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>MediScan AI</h4>
+                    <p>Advanced medical diagnosis platform powered by deep learning.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <a href="#features">Features</a>
+                    <a href="#diseases">Diseases</a>
+                    <a href="#how-it-works">How it Works</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">HIPAA Compliance</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 MediScan AI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    // Make disease cards clickable
+    document.addEventListener('DOMContentLoaded', function() {
+        const diseaseCards = document.querySelectorAll('.disease-card');
+        
+        diseaseCards.forEach(card => {
+            card.addEventListener('click', function(e) {
+                e.preventDefault();
+                const disease = this.dataset.disease;
+                if (disease) {
+                    window.location.href = `dashboard.html?disease=${disease}`;
+                }
+            });
+        });
+        
+        diseaseCards.forEach(card => {
+            card.setAttribute('tabindex', '0');
+            card.setAttribute('role', 'button');
+        });
+    });
+    </script>
+</body>
+</html>

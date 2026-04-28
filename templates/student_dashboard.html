@@ -1,0 +1,1959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MedLearn – Student Portal</title>
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary: #0ea5e9;
+      --primary-dark: #0369a1;
+      --bg: #0f172a;
+      --bg2: #1e293b;
+      --bg3: #334155;
+      --surface: #1e293b;
+      --surface2: #273549;
+      --border: #334155;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --green: #22c55e;
+      --green-bg: #052e16;
+      --red: #ef4444;
+      --red-bg: #450a0a;
+      --yellow: #f59e0b;
+      --yellow-bg: #451a03;
+      --purple: #a855f7;
+      --teal: #14b8a6;
+      --radius: 14px;
+      --radius-sm: 8px;
+      --shadow: 0 4px 24px rgba(0,0,0,0.4);
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      font-size: 14px;
+    }
+
+    /* ── Header ────────────────────────────────────────── */
+    .header {
+      background: linear-gradient(135deg, #0c1527 0%, #162032 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .brand-icon { font-size: 22px; }
+    .brand-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--primary);
+      letter-spacing: -0.3px;
+    }
+    .brand-sep {
+      color: var(--border);
+      font-size: 18px;
+    }
+    .brand-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .user-pill {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .user-pill span {
+      color: var(--primary);
+      font-weight: 600;
+    }
+    .btn-logout {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 5px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-logout:hover { border-color: var(--red); color: var(--red); }
+
+    /* ── Nav Tabs ───────────────────────────────────────── */
+    .nav-bar {
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      display: flex;
+      gap: 4px;
+    }
+    .nav-tab {
+      background: transparent;
+      border: none;
+      border-bottom: 3px solid transparent;
+      color: var(--text-muted);
+      padding: 14px 20px 11px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .nav-tab:hover { color: var(--text); }
+    .nav-tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+      font-weight: 600;
+    }
+    .nav-tab .tab-icon { font-size: 16px; }
+
+    /* ── Main Layout ───────────────────────────────────── */
+    .main {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* ── Cards ─────────────────────────────────────────── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+    .card-title {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .card-title .icon { font-size: 16px; }
+
+    /* ── Buttons ───────────────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 18px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+    .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
+    .btn-secondary {
+      background: var(--bg3);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover { background: #3d4f66; }
+    .btn-success {
+      background: #15803d;
+      color: #fff;
+    }
+    .btn-success:hover { background: #166534; }
+    .btn-danger {
+      background: transparent;
+      color: var(--red);
+      border: 1px solid var(--red);
+    }
+    .btn-danger:hover { background: var(--red-bg); }
+    .btn-sm { padding: 5px 12px; font-size: 12px; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+
+    /* ── AI Chat Tab ───────────────────────────────────── */
+    .chat-chip {
+      padding: 5px 12px;
+      background: rgba(168,85,247,0.12);
+      border: 1px solid rgba(168,85,247,0.3);
+      border-radius: 20px;
+      color: #c084fc;
+      font-size: 12px;
+      cursor: pointer;
+      transition: background 0.15s;
+      white-space: nowrap;
+    }
+    .chat-chip:hover { background: rgba(168,85,247,0.25); }
+
+    .chat-msg {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      animation: fadeInUp 0.25s ease;
+    }
+    .chat-msg.user-msg { flex-direction: row-reverse; }
+
+    .chat-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .bot-avatar { background: linear-gradient(135deg,#a855f7,#6366f1); }
+    .user-avatar { background: var(--primary-dark); }
+
+    .chat-bubble {
+      max-width: 75%;
+      padding: 10px 14px;
+      border-radius: 14px;
+      font-size: 13px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .bot-bubble {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-top-left-radius: 4px;
+    }
+    .user-bubble {
+      background: linear-gradient(135deg,rgba(99,102,241,0.3),rgba(168,85,247,0.2));
+      border: 1px solid rgba(99,102,241,0.4);
+      border-top-right-radius: 4px;
+      text-align: right;
+    }
+    .chat-time {
+      font-size: 10px;
+      color: var(--text-dim);
+      margin-top: 3px;
+      text-align: right;
+    }
+    .bot-time { text-align: left; }
+
+    .chat-source-badge {
+      display: inline-block;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 8px;
+      margin-top: 4px;
+      background: rgba(168,85,247,0.15);
+      color: #c084fc;
+    }
+
+    /* Typing dots animation */
+    .dot {
+      width: 6px; height: 6px;
+      background: var(--text-muted);
+      border-radius: 50%;
+      display: inline-block;
+      animation: dotBounce 1.2s infinite ease-in-out;
+    }
+    .dot:nth-child(1) { animation-delay: 0s; }
+    .dot:nth-child(2) { animation-delay: 0.2s; }
+    .dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes dotBounce {
+      0%, 60%, 100% { transform: translateY(0); }
+      30% { transform: translateY(-6px); }
+    }
+
+    /* ── Search & Learn Tab ────────────────────────────── */
+    .sl-grid {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+    @media (max-width: 900px) { .sl-grid { grid-template-columns: 1fr; } }
+
+    /* Scanner panel */
+    .scanner-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    #qr-reader {
+      width: 100%;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      background: #000;
+      min-height: 200px;
+    }
+    #qr-reader video { width: 100% !important; }
+    .scan-controls { display: flex; gap: 8px; flex-wrap: wrap; }
+    .demo-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+    }
+    .demo-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+    .demo-pill {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      color: var(--primary);
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: monospace;
+      transition: all 0.2s;
+    }
+    .demo-pill:hover {
+      background: #1a3a5c;
+      border-color: var(--primary);
+      transform: translateY(-1px);
+    }
+
+    /* Results panel */
+    .placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px;
+      text-align: center;
+      gap: 12px;
+    }
+    .placeholder-icon { font-size: 48px; opacity: 0.3; }
+    .placeholder-text { color: var(--text-dim); font-size: 14px; max-width: 280px; line-height: 1.5; }
+
+    .results-wrap { display: flex; flex-direction: column; gap: 16px; }
+
+    /* Case info card */
+    .case-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .case-badge {
+      font-size: 11px;
+      font-weight: 700;
+      font-family: monospace;
+      background: var(--bg3);
+      color: var(--primary);
+      padding: 3px 9px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+    }
+    .category-badge {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .cat-Endocrinology { color: #fb923c; }
+    .cat-Pulmonology { color: var(--primary); }
+    .cat-Nephrology { color: var(--teal); }
+    .cat-Cardiology { color: var(--red); }
+    .cat-Psychiatry { color: var(--purple); }
+
+    .disease-name { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+    .duration-text { font-size: 12px; color: var(--text-muted); }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    @media (max-width: 600px) { .info-grid { grid-template-columns: 1fr; } }
+    .info-block { background: var(--bg3); border-radius: var(--radius-sm); padding: 12px; }
+    .info-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-dim);
+      margin-bottom: 5px;
+    }
+    .info-value { font-size: 13px; color: var(--text); line-height: 1.5; }
+
+    .success-bar-wrap { margin-bottom: 14px; }
+    .success-label { display: flex; justify-content: space-between; margin-bottom: 5px; }
+    .success-label span { font-size: 12px; color: var(--text-muted); }
+    .success-label strong { font-size: 14px; color: var(--green); }
+    .progress-track { background: var(--bg3); border-radius: 99px; height: 8px; overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--green), var(--teal)); border-radius: 99px; transition: width 1s ease; }
+
+    .med-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .med-tag {
+      background: #0c2340;
+      border: 1px solid #1d4275;
+      color: #7dd3fc;
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    /* AI Summary card */
+    .ai-summary-text {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.7;
+      border-left: 3px solid var(--primary);
+      padding-left: 14px;
+      background: #081928;
+      border-radius: 0 8px 8px 0;
+      padding: 14px 14px 14px 18px;
+    }
+    .ai-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--primary);
+      background: #0c2340;
+      border: 1px solid #1d4275;
+      border-radius: 4px;
+      padding: 2px 7px;
+      margin-top: 8px;
+    }
+
+    /* Resources card */
+    .resource-section { margin-bottom: 16px; }
+    .resource-section-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .resource-list { display: flex; flex-direction: column; gap: 6px; }
+    .resource-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 12px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      color: var(--text);
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+    .resource-link:hover { background: var(--bg2); border-color: var(--primary); color: var(--primary); transform: translateX(3px); }
+    .resource-link .rl-icon { font-size: 15px; flex-shrink: 0; }
+    .resource-link .rl-text { flex: 1; line-height: 1.3; }
+    .resource-link .rl-arrow { color: var(--text-dim); font-size: 12px; flex-shrink: 0; }
+
+    .save-note-bar {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      padding-top: 4px;
+    }
+
+    /* ── Contest Tab ──────────────────────────────────── */
+    .contest-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+    @media (max-width: 700px) { .contest-cards { grid-template-columns: 1fr; } }
+
+    .contest-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: border-color 0.2s;
+      cursor: pointer;
+    }
+    .contest-card:hover { border-color: var(--primary); }
+    .contest-card.daily { border-top: 3px solid var(--teal); }
+    .contest-card.weekly { border-top: 3px solid var(--purple); }
+    .contest-card-icon { font-size: 32px; }
+    .contest-card-title { font-size: 16px; font-weight: 700; }
+    .contest-card-desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+    .contest-card-meta { display: flex; gap: 12px; margin-top: 4px; flex-wrap: wrap; }
+    .contest-meta-pill {
+      background: var(--bg3);
+      border-radius: 20px;
+      padding: 3px 10px;
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* Quiz area */
+    #quiz-area { display: none; }
+    .quiz-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .quiz-progress-text { font-size: 14px; color: var(--text-muted); }
+    .quiz-progress-text span { color: var(--primary); font-weight: 700; }
+    .quiz-timer {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--yellow);
+      font-variant-numeric: tabular-nums;
+      min-width: 50px;
+    }
+    .quiz-timer.urgent { color: var(--red); animation: pulse 1s infinite; }
+    @keyframes pulse { 0%, 100% { opacity:1; } 50% { opacity:0.5; } }
+
+    .quiz-progress-bar { background: var(--bg3); border-radius: 99px; height: 4px; margin-bottom: 24px; overflow: hidden; }
+    .quiz-progress-fill { height: 100%; background: var(--primary); border-radius: 99px; transition: width 0.4s; }
+
+    .quiz-question {
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 1.6;
+      color: var(--text);
+      margin-bottom: 20px;
+      padding: 18px;
+      background: var(--bg3);
+      border-radius: var(--radius);
+      border-left: 3px solid var(--primary);
+    }
+
+    .quiz-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+    .quiz-option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 16px;
+      background: var(--bg3);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.15s;
+      font-size: 14px;
+    }
+    .quiz-option:hover { border-color: var(--primary); background: #1a3a5c; }
+    .quiz-option.selected { border-color: var(--primary); background: #0c2340; color: #7dd3fc; }
+    .quiz-option.correct { border-color: var(--green); background: var(--green-bg); color: #86efac; }
+    .quiz-option.wrong { border-color: var(--red); background: var(--red-bg); color: #fca5a5; }
+    .option-letter {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      flex-shrink: 0;
+      border: 1px solid var(--border);
+    }
+    .quiz-option.selected .option-letter { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .quiz-option.correct .option-letter { background: var(--green); color: #fff; border-color: var(--green); }
+    .quiz-option.wrong .option-letter { background: var(--red); color: #fff; border-color: var(--red); }
+
+    .quiz-nav { display: flex; justify-content: flex-end; gap: 10px; }
+
+    /* Results */
+    #results-area { display: none; }
+    .score-banner {
+      text-align: center;
+      padding: 32px;
+      background: var(--bg2);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      margin-bottom: 24px;
+    }
+    .score-emoji { font-size: 52px; margin-bottom: 10px; }
+    .score-number { font-size: 42px; font-weight: 800; margin-bottom: 6px; }
+    .score-good { color: var(--green); }
+    .score-mid { color: var(--yellow); }
+    .score-low { color: var(--red); }
+    .score-label { font-size: 16px; color: var(--text-muted); }
+
+    .result-item {
+      padding: 16px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      margin-bottom: 10px;
+    }
+    .result-item.correct-r { border-left: 3px solid var(--green); background: #041a0c; }
+    .result-item.wrong-r { border-left: 3px solid var(--red); background: #150505; }
+    .result-q { font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+    .result-answer { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
+    .result-answer em { color: var(--text); font-style: normal; }
+    .result-correct { color: var(--green); }
+    .result-wrong { color: var(--red); }
+    .result-explanation {
+      font-size: 12px;
+      color: #7dd3fc;
+      background: #0c2340;
+      border-radius: 6px;
+      padding: 8px 10px;
+      line-height: 1.5;
+      border-left: 2px solid var(--primary);
+    }
+
+    /* ── Notes Tab ─────────────────────────────────────── */
+    .notes-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .notes-title { font-size: 18px; font-weight: 700; }
+    .category-filter { display: flex; gap: 6px; flex-wrap: wrap; }
+    .cat-btn {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .cat-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .cat-btn.active { background: var(--primary); border-color: var(--primary); color: #fff; font-weight: 600; }
+
+    #notes-list { display: flex; flex-direction: column; gap: 12px; }
+    .note-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 14px;
+      transition: border-color 0.2s;
+    }
+    .note-card:hover { border-color: var(--border); box-shadow: 0 2px 12px rgba(0,0,0,0.3); }
+    .note-body { flex: 1; min-width: 0; }
+    .note-top { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap; }
+    .note-title { font-size: 15px; font-weight: 700; }
+    .note-cat-pill {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+    }
+    .note-case-id { font-size: 11px; font-family: monospace; color: var(--text-dim); }
+    .note-preview {
+      font-size: 13px;
+      color: var(--text-muted);
+      white-space: nowrap; 
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 600px;
+      margin-bottom: 6px;
+    }
+    .note-date { font-size: 11px; color: var(--text-dim); }
+    .note-actions { display: flex; gap: 6px; flex-shrink: 0; }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-dim);
+    }
+    .empty-state .e-icon { font-size: 48px; opacity: 0.3; margin-bottom: 10px; }
+    .empty-state .e-text { font-size: 14px; }
+
+    /* ── Loading spinner ───────────────────────────────── */
+    .spinner {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      border: 2px solid var(--border);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .loading-overlay {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 20px;
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 99px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
+
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+<!-- ── HEADER ───────────────────────────────────────────────── -->
+<header class="header">
+  <div class="header-inner">
+    <div class="brand">
+      <span class="brand-icon">🩺</span>
+      <span class="brand-name">MedLearn</span>
+      <span class="brand-sep">|</span>
+      <span class="brand-sub">Student Portal</span>
+    </div>
+    <div class="header-right">
+      <div class="user-pill">Logged in as <span>{{ user_email }}</span></div>
+      <a href="/auth/logout" class="btn-logout">Logout</a>
+    </div>
+  </div>
+</header>
+
+<!-- ── NAV TABS ─────────────────────────────────────────────── -->
+<nav class="nav-bar">
+  <button class="nav-tab active" onclick="switchTab('search', this)">
+    <span class="tab-icon">🔍</span> Search & Learn
+  </button>
+  <button class="nav-tab" onclick="switchTab('contests', this)">
+    <span class="tab-icon">🏆</span> Contests
+  </button>
+  <button class="nav-tab" onclick="switchTab('hospital', this)">
+    <span class="tab-icon">🏥</span> Hospital Network
+  </button>
+  <button class="nav-tab" onclick="switchTab('chat', this)">
+    <span class="tab-icon">🤖</span> AI Chat
+  </button>
+  <button class="nav-tab" onclick="switchTab('notes', this)">
+    <span class="tab-icon">📝</span> My Notes
+  </button>
+</nav>
+
+<!-- ── MAIN ─────────────────────────────────────────────────── -->
+<main class="main">
+
+  <!-- ════════════════════════════════════════════════════════
+       TAB 1 – SEARCH & LEARN
+  ════════════════════════════════════════════════════════ -->
+  <div id="tab-search" class="tab-content active">
+    <div class="sl-grid">
+
+      <!-- Left: Scanner Panel -->
+      <div class="scanner-wrap">
+        <div class="card">
+          <div class="card-title"><span class="icon">📷</span> QR Code Scanner</div>
+          <div id="qr-reader"></div>
+          <div class="scan-controls" style="margin-top:12px;">
+            <button id="btn-start" class="btn btn-primary" onclick="startScanner()">📷 Start Camera</button>
+            <button id="btn-stop" class="btn btn-secondary hidden" onclick="stopScanner()">⏹ Stop</button>
+          </div>
+          <p style="font-size:11px;color:var(--text-dim);margin-top:8px;line-height:1.5;">
+            Scan a patient QR code containing PAT ID (example: PAT001). Students can also enter patient ID manually below.
+          </p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">
+            <input id="search-patient-id" type="text" placeholder="Enter PAT ID (e.g., PAT001)" style="flex:1;min-width:180px;" />
+            <button class="btn btn-secondary" style="width:auto;" onclick="loadCase(document.getElementById('search-patient-id').value.trim().toUpperCase())">Load PAT ID</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="demo-title">Patient IDs — Click To Simulate Scan</div>
+          <div class="demo-pills">
+            {% for patient_id in demo_patient_ids %}
+            <button class="demo-pill" onclick="loadCase('{{ patient_id }}')">{{ patient_id }}</button>
+            {% endfor %}
+          </div>
+          <p style="font-size:11px;color:var(--text-dim);margin-top:10px;line-height:1.5;">
+            Each patient ID can be typed manually or scanned from generated QR cards below.
+          </p>
+          <div id="patient-qr-gallery" style="margin-top:10px;display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;"></div>
+        </div>
+      </div>
+
+      <!-- Right: Results Panel -->
+      <div id="results-panel">
+        <div id="results-placeholder" class="card">
+          <div class="placeholder">
+            <div class="placeholder-icon">🏥</div>
+            <div class="placeholder-text">Scan a patient QR code or click a demo case above to load educational data and AI-generated learning content</div>
+          </div>
+        </div>
+
+        <div id="results-content" class="results-wrap hidden">
+
+          <!-- Case Info Card -->
+          <div class="card" id="case-info-card">
+            <div class="case-header">
+              <div>
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+                  <span id="case-id-badge" class="case-badge"></span>
+                  <span id="case-category-badge" class="category-badge"></span>
+                </div>
+                <div id="case-disease" class="disease-name"></div>
+                <div id="case-duration" class="duration-text"></div>
+              </div>
+              <div style="text-align:right;">
+                <div class="success-bar-wrap" style="min-width:150px;">
+                  <div class="success-label">
+                    <span>Success Rate</span>
+                    <strong id="case-success-rate"></strong>
+                  </div>
+                  <div class="progress-track">
+                    <div id="success-fill" class="progress-fill" style="width:0%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="info-grid">
+              <div class="info-block">
+                <div class="info-label">Treatment Protocol</div>
+                <div class="info-value" id="case-treatment"></div>
+              </div>
+              <div class="info-block">
+                <div class="info-label">Outcome</div>
+                <div class="info-value" id="case-outcome"></div>
+              </div>
+            </div>
+
+            <div class="info-label" style="margin-bottom:8px;">Medications</div>
+            <div class="med-tags" id="case-medicines"></div>
+          </div>
+
+          <!-- AI Summary Card -->
+          <div class="card">
+            <div class="card-title"><span class="icon">🤖</span> AI Learning Summary</div>
+            <div id="ai-loading" class="loading-overlay hidden">
+              <div class="spinner"></div> Generating educational summary...
+            </div>
+            <div id="ai-summary-text" class="ai-summary-text"></div>
+            <div class="ai-badge">⚡ AI Generated · Educational Use Only</div>
+          </div>
+
+          <!-- Resources Card -->
+          <div class="card">
+            <div class="card-title"><span class="icon">📚</span> Study Resources</div>
+            <div class="resource-section">
+              <div class="resource-section-title">🔬 Research Articles (PubMed)</div>
+              <div class="resource-list" id="articles-list"></div>
+            </div>
+            <div class="resource-section">
+              <div class="resource-section-title">▶ YouTube Videos</div>
+              <div class="resource-list" id="youtube-list"></div>
+            </div>
+
+            <div class="save-note-bar">
+              <button class="btn btn-success" onclick="saveCurrentNote()">💾 Save to Notes</button>
+            </div>
+          </div>
+
+        </div><!-- /#results-content -->
+      </div><!-- /#results-panel -->
+
+    </div><!-- /.sl-grid -->
+  </div><!-- /#tab-search -->
+
+
+  <!-- ════════════════════════════════════════════════════════
+       TAB 2 – CONTESTS
+  ════════════════════════════════════════════════════════ -->
+  <div id="tab-contests" class="tab-content">
+
+    <div id="contest-picker">
+      <h2 style="font-size:20px;font-weight:700;margin-bottom:6px;">Knowledge Contests</h2>
+      <p style="color:var(--text-muted);font-size:13px;margin-bottom:22px;">
+        Questions are generated from cases you've scanned. The more you scan and learn, the better the contest topics become.
+      </p>
+      <div class="contest-cards">
+        <div class="contest-card daily" onclick="startContest('daily')">
+          <div class="contest-card-icon">📅</div>
+          <div class="contest-card-title">Daily Contest</div>
+          <div class="contest-card-desc">
+            5 questions based on cases scanned today. Sharp, focused, fast — perfect for a quick knowledge check between rounds.
+          </div>
+          <div class="contest-card-meta">
+            <span class="contest-meta-pill">5 Questions</span>
+            <span class="contest-meta-pill">2 min / question</span>
+            <span class="contest-meta-pill" style="color:var(--teal);">Daily refresh</span>
+          </div>
+          <button class="btn btn-primary" style="margin-top:6px;width:fit-content;">Start Daily Contest →</button>
+        </div>
+
+        <div class="contest-card weekly" onclick="startContest('weekly')">
+          <div class="contest-card-icon">📆</div>
+          <div class="contest-card-title">Weekly Contest</div>
+          <div class="contest-card-desc">
+            10 questions drawn from all cases you've scanned this week. A comprehensive weekly revision to reinforce learning.
+          </div>
+          <div class="contest-card-meta">
+            <span class="contest-meta-pill">10 Questions</span>
+            <span class="contest-meta-pill">2 min / question</span>
+            <span class="contest-meta-pill" style="color:var(--purple);">Weekly refresh</span>
+          </div>
+          <button class="btn btn-primary" style="margin-top:6px;width:fit-content;background:#7c3aed;">Start Weekly Contest →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quiz Area -->
+    <div id="quiz-area">
+      <div class="quiz-header">
+        <div>
+          <div style="font-size:16px;font-weight:700;" id="quiz-title"></div>
+          <div class="quiz-progress-text">Question <span id="q-current">1</span> of <span id="q-total">5</span></div>
+        </div>
+        <div class="quiz-timer" id="quiz-timer">2:00</div>
+      </div>
+      <div class="quiz-progress-bar">
+        <div class="quiz-progress-fill" id="quiz-progress-fill" style="width:0%"></div>
+      </div>
+      <div class="quiz-question" id="quiz-question-text"></div>
+      <div class="quiz-options" id="quiz-options"></div>
+      <div class="quiz-nav">
+        <button id="btn-prev-q" class="btn btn-secondary" onclick="prevQuestion()" disabled>← Prev</button>
+        <button id="btn-next-q" class="btn btn-primary" onclick="nextQuestion()">Next →</button>
+        <button id="btn-submit-q" class="btn btn-success hidden" onclick="submitContest()">Submit & See Results ✓</button>
+      </div>
+    </div>
+
+    <!-- Results Area -->
+    <div id="results-area">
+      <div class="score-banner">
+        <div class="score-emoji" id="score-emoji"></div>
+        <div class="score-number" id="score-display"></div>
+        <div class="score-label" id="score-label"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+        <h3 style="font-size:15px;font-weight:700;">Question Review</h3>
+        <button class="btn btn-secondary" onclick="resetContest()">← Back to Contests</button>
+      </div>
+      <div id="results-list"></div>
+    </div>
+
+  </div><!-- /#tab-contests -->
+
+  <!-- ════════════════════════════════════════════════════════
+       TAB 3 – HOSPITAL NETWORK (Patient Lookup)
+  ════════════════════════════════════════════════════════ -->
+  <div id="tab-hospital" class="tab-content">
+    <div style="max-width:1200px;margin:0 auto;padding:20px;">
+      <h2 style="font-size:20px;font-weight:700;margin-bottom:6px;">Hospital Network</h2>
+      <p style="color:var(--text-muted);margin-bottom:16px;">Access patient data and learning materials via Patient ID</p>
+      
+      <!-- Patient ID Search -->
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:20px;">
+        <h3 style="color:var(--text);margin-bottom:12px;">🔐 Patient Lookup</h3>
+        <div style="display:flex;gap:8px;margin-bottom:12px;">
+          <input type="text" id="patient-id-input" placeholder="Enter Patient ID (e.g., PAT001)" 
+                 style="flex:1;padding:10px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:14px;">
+          <button class="btn btn-primary" onclick="searchPatient()" style="white-space:nowrap;">Search</button>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <small style="color:var(--text-muted);display:block;width:100%;">Available patients: PAT001 – PAT010</small>
+          <button class="btn" onclick="quickSelectPatient('PAT001')" style="padding:6px 8px;font-size:12px;background:var(--bg3);border:1px solid var(--border);">PAT001</button>
+          <button class="btn" onclick="quickSelectPatient('PAT002')" style="padding:6px 8px;font-size:12px;background:var(--bg3);border:1px solid var(--border);">PAT002</button>
+          <button class="btn" onclick="quickSelectPatient('PAT003')" style="padding:6px 8px;font-size:12px;background:var(--bg3);border:1px solid var(--border);">PAT003</button>
+          <button class="btn" onclick="quickSelectPatient('PAT004')" style="padding:6px 8px;font-size:12px;background:var(--bg3);border:1px solid var(--border);">PAT004</button>
+          <button class="btn" onclick="quickSelectPatient('PAT005')" style="padding:6px 8px;font-size:12px;background:var(--bg3);border:1px solid var(--border);">PAT005</button>
+          <button class="btn" onclick="quickSelectPatient('PAT006')" style="padding:6px 8px;font-size:12px;background:var(--bg3);border:1px solid var(--border);">PAT006</button>
+          <button class="btn" onclick="quickSelectPatient('PAT007')" style="padding:6px 8px;font-size:12px;background:var(--bg3);border:1px solid var(--border);">PAT007</button>
+          <button class="btn" onclick="quickSelectPatient('PAT008')" style="padding:6px 8px;font-size:12px;background:var(--bg3);border:1px solid var(--border);">PAT008</button>
+          <button class="btn" onclick="quickSelectPatient('PAT009')" style="padding:6px 8px;font-size:12px;background:var(--bg3);border:1px solid var(--border);">PAT009</button>
+          <button class="btn" onclick="quickSelectPatient('PAT010')" style="padding:6px 8px;font-size:12px;background:var(--bg3);border:1px solid var(--border);">PAT010</button>
+        </div>
+      </div>
+
+      <!-- Patient Details -->
+      <div id="hospital-patient-display" style="display:none;">
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin-bottom:16px;">
+            <!-- Patient Info Card -->
+            <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;">
+              <div style="font-size:12px;color:var(--text-muted);font-weight:600;margin-bottom:4px;">PATIENT INFO</div>
+              <div id="hospital-patient-name" style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:4px;"></div>
+              <div style="font-size:12px;color:var(--text-muted);" id="hospital-patient-mrn"></div>
+              <div style="font-size:12px;color:var(--text-muted);" id="hospital-patient-age"></div>
+              <div style="font-size:12px;color:var(--text-muted);" id="hospital-personal-id"></div>
+            </div>
+
+            <!-- Diagnosis Card -->
+            <div style="background:var(--red-bg);border:1px solid var(--red);border-radius:var(--radius-sm);padding:12px;">
+              <div style="font-size:12px;color:var(--red);font-weight:600;margin-bottom:4px;">DIAGNOSIS</div>
+              <div id="hospital-diagnosis" style="font-size:14px;font-weight:600;color:var(--text);"></div>
+            </div>
+
+            <!-- Treatment Status Card -->
+            <div style="background:var(--green-bg);border:1px solid var(--green);border-radius:var(--radius-sm);padding:12px;">
+              <div style="font-size:12px;color:var(--green);font-weight:600;margin-bottom:4px;">STATUS</div>
+              <div id="hospital-status" style="font-size:14px;font-weight:600;color:var(--text);"></div>
+              <div id="hospital-treatment-cats" style="font-size:12px;color:var(--text-muted);margin-top:6px;"></div>
+            </div>
+          </div>
+
+          <!-- Vital Signs -->
+          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;margin-bottom:12px;">
+            <h4 style="color:var(--text);font-size:12px;font-weight:700;margin-bottom:8px;">📊 Vital Signs</h4>
+            <div id="hospital-vitals" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;font-size:12px;"></div>
+          </div>
+
+          <!-- Recent Labs -->
+          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;margin-bottom:12px;">
+            <h4 style="color:var(--text);font-size:12px;font-weight:700;margin-bottom:8px;">🧪 Recent Labs</h4>
+            <div id="hospital-labs" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;font-size:12px;"></div>
+          </div>
+
+          <!-- Current Medications -->
+          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;margin-bottom:12px;">
+            <h4 style="color:var(--text);font-size:12px;font-weight:700;margin-bottom:8px;">💊 Current Medications</h4>
+            <ul id="hospital-meds" style="margin:0;padding:0 0 0 20px;font-size:12px;"></ul>
+          </div>
+
+          <!-- AI Learning Summary -->
+          <div style="background:var(--purple);background-image:linear-gradient(135deg,rgba(168,85,247,0.15) 0%,rgba(168,85,247,0.05) 100%);border:1px solid rgba(168,85,247,0.3);border-radius:var(--radius-sm);padding:14px;margin-bottom:12px;">
+            <h4 style="color:var(--text);font-size:12px;font-weight:700;margin-bottom:8px;">🤖 AI Learning Summary</h4>
+            <div id="hospital-ai-summary" style="font-size:13px;line-height:1.6;color:var(--text);"></div>
+          </div>
+
+          <!-- Learning Resources -->
+          <div style="background:var(--teal);background-image:linear-gradient(135deg,rgba(20,184,166,0.15) 0%,rgba(20,184,166,0.05) 100%);border:1px solid rgba(20,184,166,0.3);border-radius:var(--radius-sm);padding:14px;">
+            <h4 style="color:var(--text);font-size:12px;font-weight:700;margin-bottom:8px;">📚 Study Resources</h4>
+            <div id="hospital-resources" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:12px;"></div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-primary" onclick="savePatientAsNote()">📝 Save to My Notes</button>
+          <button class="btn btn-secondary" onclick="document.getElementById('patient-id-input').value=''; document.getElementById('hospital-patient-display').style.display='none';">← Back</button>
+        </div>
+      </div>
+
+      <!-- Loading State -->
+      <div id="hospital-loading" style="display:none;text-align:center;padding:40px;">
+        <div style="font-size:20px;margin-bottom:12px;">⏳</div>
+        <p style="color:var(--text-muted);">Loading patient data...</p>
+      </div>
+    </div>
+  </div><!-- /#tab-hospital -->
+
+
+  <!-- ════════════════════════════════════════════════════════
+       TAB 5 – AI MEDICAL CHATBOT
+  ════════════════════════════════════════════════════════ -->
+  <div id="tab-chat" class="tab-content">
+    <div style="max-width:860px;margin:0 auto;padding:20px;display:flex;flex-direction:column;height:calc(100vh - 130px);">
+
+      <!-- Header -->
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+        <div style="width:42px;height:42px;background:linear-gradient(135deg,#a855f7,#6366f1);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">🤖</div>
+        <div>
+          <h2 style="font-size:18px;font-weight:700;margin:0;">MedBot – AI Medical Assistant</h2>
+          <p style="color:var(--text-muted);font-size:12px;margin:0;">Powered by Gemini AI · For educational use only</p>
+        </div>
+        <button onclick="clearChat()" style="margin-left:auto;padding:6px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-muted);font-size:12px;cursor:pointer;">🗑 Clear</button>
+      </div>
+
+      <!-- Quick Prompt Chips -->
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;" id="chat-chips">
+        <button class="chat-chip" onclick="sendChip(this)">Explain STEMI management</button>
+        <button class="chat-chip" onclick="sendChip(this)">What is HbA1c and why it matters?</button>
+        <button class="chat-chip" onclick="sendChip(this)">How does Metformin work?</button>
+        <button class="chat-chip" onclick="sendChip(this)">CURB-65 score for pneumonia</button>
+        <button class="chat-chip" onclick="sendChip(this)">ACE inhibitors and CKD</button>
+        <button class="chat-chip" onclick="sendChip(this)">DSM-5 criteria for depression</button>
+        <button class="chat-chip" onclick="sendChip(this)">Difference: DKA vs HHS</button>
+        <button class="chat-chip" onclick="sendChip(this)">Common drug side effects to remember</button>
+      </div>
+
+      <!-- Chat Messages -->
+      <div id="chat-messages" style="flex:1;overflow-y:auto;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;display:flex;flex-direction:column;gap:12px;min-height:0;">
+        <!-- Welcome message -->
+        <div class="chat-msg bot-msg">
+          <div class="chat-avatar bot-avatar">🤖</div>
+          <div class="chat-bubble bot-bubble">
+            <strong>Welcome to MedBot!</strong> 👋<br><br>
+            I'm your AI medical education assistant. I can help you with:<br>
+            • Disease pathophysiology &amp; clinical features<br>
+            • Pharmacology &amp; drug mechanisms<br>
+            • Diagnostic workup &amp; clinical reasoning<br>
+            • Lab interpretation, ECG basics &amp; more<br><br>
+            <em style="color:var(--text-muted);font-size:12px;">For educational use only · Not for clinical decisions</em>
+          </div>
+        </div>
+      </div>
+
+      <!-- Typing Indicator (hidden) -->
+      <div id="chat-typing" style="display:none;padding:8px 0;color:var(--text-muted);font-size:12px;">
+        <span style="display:inline-flex;align-items:center;gap:6px;">
+          <span style="display:inline-flex;gap:3px;">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          </span>
+          MedBot is thinking...
+        </span>
+      </div>
+
+      <!-- Input Bar -->
+      <div style="display:flex;gap:8px;margin-top:10px;">
+        <textarea id="chat-input" placeholder="Ask a medical question... (e.g. Explain the mechanism of beta blockers)"
+          rows="2"
+          style="flex:1;padding:10px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:14px;resize:none;font-family:inherit;line-height:1.4;"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat();}"></textarea>
+        <button onclick="sendChat()" id="chat-send-btn"
+          style="padding:10px 18px;background:linear-gradient(135deg,#a855f7,#6366f1);border:none;border-radius:var(--radius-sm);color:#fff;font-size:16px;cursor:pointer;align-self:flex-end;height:44px;">
+          ➤
+        </button>
+      </div>
+      <p style="color:var(--text-dim);font-size:11px;margin-top:6px;text-align:center;">Press Enter to send · Shift+Enter for new line · MedBot may make mistakes – verify with textbooks</p>
+    </div>
+  </div><!-- /#tab-chat -->
+
+
+  <!-- ════════════════════════════════════════════════════════
+       TAB 6 – MY NOTES
+  ════════════════════════════════════════════════════════ -->
+  <div id="tab-notes" class="tab-content">
+    <div class="notes-top">
+      <div class="notes-title">📝 My Study Notes</div>
+      <div>
+        <div class="category-filter" id="cat-filter">
+          <button class="cat-btn active" onclick="filterNotes('all', this)">All</button>
+        </div>
+      </div>
+    </div>
+    <div id="notes-list">
+      <div class="empty-state">
+        <div class="e-icon">📓</div>
+        <div class="e-text">No notes yet. Scan a case and click "Save to Notes".</div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ═══════════════════════════════════════════════════════════
+  JAVASCRIPT
+═══════════════════════════════════════════════════════════ -->
+<script>
+// ── State ─────────────────────────────────────────────────────
+let qrScanner = null;
+let currentCase = null;
+let currentPatientFromScan = null;
+let currentAiSummary = '';
+let currentResources = null;
+let allNotes = [];
+let activeFilter = 'all';
+
+// Contest state
+let contestQuestions = [];
+let contestCategories = [];
+let contestType = '';
+let currentQuestionIdx = 0;
+let selectedAnswers = {};
+let timerInterval = null;
+let secondsLeft = 120;
+
+// ── Tab switching ──────────────────────────────────────────────
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  if (btn) btn.classList.add('active');
+  if (name === 'notes') loadNotes();
+}
+
+// ── QR Scanner ────────────────────────────────────────────────
+function startScanner() {
+  if (qrScanner) return;
+  qrScanner = new Html5Qrcode('qr-reader');
+  qrScanner.start(
+    { facingMode: 'environment' },
+    { fps: 12, qrbox: { width: 240, height: 240 } },
+    (decoded) => {
+      stopScanner();
+      loadCase(decoded.trim().toUpperCase());
+    },
+    () => {}
+  ).then(() => {
+    document.getElementById('btn-start').classList.add('hidden');
+    document.getElementById('btn-stop').classList.remove('hidden');
+  }).catch(err => {
+    qrScanner = null;
+    alert('Camera access denied or unavailable. Please use demo cases below.');
+  });
+}
+
+function stopScanner() {
+  if (qrScanner) {
+    qrScanner.stop().then(() => {
+      qrScanner.clear();
+      qrScanner = null;
+    }).catch(() => { qrScanner = null; });
+  }
+  document.getElementById('btn-start').classList.remove('hidden');
+  document.getElementById('btn-stop').classList.add('hidden');
+}
+
+// ── Load Case ─────────────────────────────────────────────────
+async function loadCase(caseId) {
+  const scanId = String(caseId || '').trim().toUpperCase();
+  if (!scanId) {
+    showToast('⚠️ Enter or scan patient ID', true);
+    return;
+  }
+
+  document.getElementById('results-placeholder').classList.add('hidden');
+  document.getElementById('results-content').classList.add('hidden');
+  document.getElementById('results-placeholder').innerHTML = `
+    <div class="loading-overlay" style="justify-content:center;flex-direction:column;gap:12px;padding:60px 20px;">
+      <div class="spinner" style="width:32px;height:32px;border-width:3px;"></div>
+      <div style="color:var(--text-muted);font-size:13px;">Loading ${scanId}...</div>
+    </div>`;
+  document.getElementById('results-placeholder').classList.remove('hidden');
+
+  try {
+    const res = await fetch('/api/student/process-qr', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ qr_data: scanId, provider: 'mock' })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Unknown error');
+    renderCase(data);
+  } catch (err) {
+    document.getElementById('results-placeholder').innerHTML = `
+      <div class="placeholder">
+        <div class="placeholder-icon">⚠️</div>
+        <div class="placeholder-text" style="color:var(--red);">${err.message}</div>
+      </div>`;
+  }
+}
+
+function renderCase(data) {
+  currentCase = data.case;
+  currentPatientFromScan = data.patient || null;
+  currentAiSummary = data.ai_summary;
+  currentResources = data.resources;
+
+  // Case info
+  const idLabel = data.patientId || currentCase.case_id;
+  document.getElementById('case-id-badge').textContent = idLabel;
+  const catBadge = document.getElementById('case-category-badge');
+  catBadge.textContent = currentCase.category;
+  catBadge.className = 'category-badge cat-' + currentCase.category;
+
+  document.getElementById('case-disease').textContent = currentCase.disease;
+  document.getElementById('case-duration').textContent =
+    `Duration: ${currentCase.duration_months} month${currentCase.duration_months > 1 ? 's' : ''} · ${currentCase.category} · ID: ${idLabel}`;
+
+  document.getElementById('case-treatment').textContent = currentCase.treatment_done;
+  document.getElementById('case-outcome').textContent = currentCase.outcome;
+
+  const pct = parseInt(currentCase.success_rate);
+  document.getElementById('case-success-rate').textContent = currentCase.success_rate;
+  setTimeout(() => {
+    document.getElementById('success-fill').style.width = (isNaN(pct) ? 80 : pct) + '%';
+  }, 100);
+
+  const medsEl = document.getElementById('case-medicines');
+  medsEl.innerHTML = currentCase.medicines.map(m => `<span class="med-tag">💊 ${m}</span>`).join('');
+
+  // AI Summary
+  document.getElementById('ai-summary-text').textContent = currentAiSummary;
+
+  // Resources
+  const articlesList = document.getElementById('articles-list');
+  articlesList.innerHTML = (data.resources.articles || []).map(a =>
+    `<a class="resource-link" href="${a.url}" target="_blank" rel="noopener noreferrer">
+      <span class="rl-icon">📄</span>
+      <span class="rl-text">${a.title}</span>
+      <span class="rl-arrow">↗</span>
+    </a>`
+  ).join('');
+
+  const ytList = document.getElementById('youtube-list');
+  ytList.innerHTML = (data.resources.youtube || []).map(v =>
+    `<a class="resource-link" href="${v.url}" target="_blank" rel="noopener noreferrer">
+      <span class="rl-icon">▶️</span>
+      <span class="rl-text">${v.title}</span>
+      <span class="rl-arrow">↗</span>
+    </a>`
+  ).join('');
+
+  document.getElementById('results-placeholder').classList.add('hidden');
+  document.getElementById('results-content').classList.remove('hidden');
+}
+
+// ── Save Note ─────────────────────────────────────────────────
+async function saveCurrentNote() {
+  if (!currentCase) return;
+  const noteCaseId = currentPatientFromScan?.patient_id || currentCase.case_id;
+  const noteContent =
+    `Patient ID: ${noteCaseId}\n` +
+    `Disease: ${currentCase.disease}\n` +
+    `Category: ${currentCase.category}\n` +
+    `Treatment: ${currentCase.treatment_done}\n` +
+    `Medicines: ${currentCase.medicines.join(', ')}\n` +
+    `Outcome: ${currentCase.outcome}\n` +
+    `Success Rate: ${currentCase.success_rate}\n\n` +
+    `AI Learning Summary:\n${currentAiSummary}\n\n` +
+    `Study Resources:\n` +
+    (currentResources?.articles || []).map(a => `[Article] ${a.title} - ${a.url}`).join('\n') + '\n' +
+    (currentResources?.youtube || []).map(v => `[YouTube] ${v.title} - ${v.url}`).join('\n');
+
+  try {
+    const res = await fetch('/api/student/save-note', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        case_id: noteCaseId,
+        title: currentCase.disease,
+        category: currentCase.category,
+        content: noteContent
+      })
+    });
+    const d = await res.json();
+    if (!res.ok) throw new Error(d.error);
+    showToast('✅ Note saved to My Notes!');
+  } catch (err) {
+    showToast('❌ ' + err.message, true);
+  }
+}
+
+async function loadPatientQrGallery() {
+  const holder = document.getElementById('patient-qr-gallery');
+  if (!holder) return;
+  holder.innerHTML = '<div style="font-size:12px;color:var(--text-muted);">Loading patient QR cards...</div>';
+  try {
+    const res = await fetch('/api/student/patient-qr-list');
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed to load patient QR list');
+
+    holder.innerHTML = (data.patients || []).map((p) => `
+      <div style="border:1px solid var(--border);border-radius:12px;background:var(--bg2);padding:8px;text-align:center;">
+        <img src="${p.qr_url}" alt="QR for ${p.patient_id}" style="width:96px;height:96px;border-radius:8px;background:#fff;padding:4px;" />
+        <div style="font-size:11px;font-weight:700;margin-top:6px;">${p.patient_id}</div>
+        <div style="font-size:10px;color:var(--text-dim);min-height:28px;line-height:1.3;">${p.name}</div>
+        <button class="btn btn-secondary" style="margin-top:6px;padding:6px 8px;font-size:11px;" onclick="loadCase('${p.patient_id}')">Use</button>
+      </div>
+    `).join('');
+  } catch (err) {
+    holder.innerHTML = `<div style="font-size:12px;color:#ef4444;">${err.message}</div>`;
+  }
+}
+
+// ── Toast ─────────────────────────────────────────────────────
+function showToast(msg, isError = false) {
+  const t = document.createElement('div');
+  t.style.cssText = `
+    position:fixed;bottom:24px;right:24px;z-index:9999;
+    background:${isError ? '#450a0a' : '#052e16'};
+    border:1px solid ${isError ? '#ef4444' : '#22c55e'};
+    color:${isError ? '#fca5a5' : '#86efac'};
+    padding:12px 20px;border-radius:10px;font-size:13px;font-weight:600;
+    box-shadow:0 4px 20px rgba(0,0,0,0.5);
+    animation:slideIn 0.3s ease;
+  `;
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3000);
+}
+
+// ── CONTESTS ──────────────────────────────────────────────────
+async function startContest(type) {
+  contestType = type;
+  selectedAnswers = {};
+  currentQuestionIdx = 0;
+
+  const endpoint = type === 'daily' ? '/api/student/daily-contest' : '/api/student/weekly-contest';
+  try {
+    const res = await fetch(endpoint);
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+
+    contestQuestions = data.questions;
+    contestCategories = data.categories;
+
+    document.getElementById('contest-picker').classList.add('hidden');
+    document.getElementById('results-area').style.display = 'none';
+    document.getElementById('quiz-area').style.display = 'block';
+    document.getElementById('quiz-title').textContent =
+      type === 'daily' ? '📅 Daily Contest' : '📆 Weekly Contest';
+    document.getElementById('q-total').textContent = contestQuestions.length;
+
+    renderQuestion(0);
+  } catch (err) {
+    alert('Could not load contest: ' + err.message);
+  }
+}
+
+function renderQuestion(idx) {
+  clearInterval(timerInterval);
+  const q = contestQuestions[idx];
+  document.getElementById('q-current').textContent = idx + 1;
+  document.getElementById('quiz-progress-fill').style.width =
+    ((idx / contestQuestions.length) * 100) + '%';
+  document.getElementById('quiz-question-text').textContent = q.q;
+
+  const letters = ['A', 'B', 'C', 'D'];
+  const opts = document.getElementById('quiz-options');
+  opts.innerHTML = q.options.map((opt, i) => {
+    const sel = selectedAnswers[idx] === i ? 'selected' : '';
+    return `<div class="quiz-option ${sel}" onclick="selectAnswer(${idx}, ${i})">
+      <span class="option-letter">${letters[i]}</span>
+      <span>${opt}</span>
+    </div>`;
+  }).join('');
+
+  // Nav buttons
+  document.getElementById('btn-prev-q').disabled = idx === 0;
+  const isLast = idx === contestQuestions.length - 1;
+  document.getElementById('btn-next-q').classList.toggle('hidden', isLast);
+  document.getElementById('btn-submit-q').classList.toggle('hidden', !isLast);
+
+  // Timer (2 min per question)
+  secondsLeft = 120;
+  updateTimer();
+  timerInterval = setInterval(() => {
+    secondsLeft--;
+    updateTimer();
+    if (secondsLeft <= 0) {
+      clearInterval(timerInterval);
+      if (idx < contestQuestions.length - 1) {
+        nextQuestion();
+      } else {
+        submitContest();
+      }
+    }
+  }, 1000);
+}
+
+function updateTimer() {
+  const m = Math.floor(secondsLeft / 60);
+  const s = secondsLeft % 60;
+  const el = document.getElementById('quiz-timer');
+  el.textContent = `${m}:${s.toString().padStart(2, '0')}`;
+  el.classList.toggle('urgent', secondsLeft <= 15);
+}
+
+function selectAnswer(qIdx, optIdx) {
+  selectedAnswers[qIdx] = optIdx;
+  const opts = document.querySelectorAll('.quiz-option');
+  opts.forEach((el, i) => {
+    el.classList.toggle('selected', i === optIdx);
+  });
+}
+
+function nextQuestion() {
+  if (currentQuestionIdx < contestQuestions.length - 1) {
+    currentQuestionIdx++;
+    renderQuestion(currentQuestionIdx);
+  }
+}
+
+function prevQuestion() {
+  if (currentQuestionIdx > 0) {
+    currentQuestionIdx--;
+    renderQuestion(currentQuestionIdx);
+  }
+}
+
+async function submitContest() {
+  clearInterval(timerInterval);
+  try {
+    const res = await fetch('/api/student/submit-contest', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: contestType,
+        answers: selectedAnswers,
+        categories: contestCategories
+      })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+    showResultsScreen(data);
+  } catch (err) {
+    alert('Submit failed: ' + err.message);
+  }
+}
+
+function showResultsScreen(data) {
+  document.getElementById('quiz-area').style.display = 'none';
+  document.getElementById('results-area').style.display = 'block';
+
+  const pct = Math.round((data.score / data.total) * 100);
+  const emoji = pct >= 80 ? '🏆' : pct >= 60 ? '👍' : '📚';
+  const cls = pct >= 80 ? 'score-good' : pct >= 60 ? 'score-mid' : 'score-low';
+  const label = pct >= 80 ? 'Excellent! Keep it up!' : pct >= 60 ? 'Good effort! Review the explanations below.' : 'Keep studying — you\'re learning every day!';
+
+  document.getElementById('score-emoji').textContent = emoji;
+  document.getElementById('score-display').innerHTML =
+    `<span class="${cls}">${data.score}</span><span style="color:var(--text-dim);font-size:28px;"> / ${data.total}</span>`;
+  document.getElementById('score-label').textContent = label;
+
+  const letters = ['A', 'B', 'C', 'D'];
+  document.getElementById('results-list').innerHTML = data.results.map((r, i) => {
+    const cls2 = r.isCorrect ? 'correct-r' : 'wrong-r';
+    const yourAns = r.selected !== null && r.selected !== undefined
+      ? `${letters[r.selected]}: ${r.options[r.selected] || '—'}` : '(not answered)';
+    const correctAns = `${letters[r.correct]}: ${r.options[r.correct]}`;
+    return `<div class="result-item ${cls2}">
+      <div class="result-q">Q${i+1}. ${r.q}</div>
+      <div class="result-answer">
+        Your answer: <em class="${r.isCorrect ? 'result-correct' : 'result-wrong'}">${yourAns}</em>
+        ${!r.isCorrect ? ` &nbsp;·&nbsp; Correct: <em class="result-correct">${correctAns}</em>` : ''}
+        &nbsp;<span style="font-size:14px;">${r.isCorrect ? '✅' : '❌'}</span>
+      </div>
+      <div class="result-explanation">💡 ${r.explanation}</div>
+    </div>`;
+  }).join('');
+}
+
+function resetContest() {
+  clearInterval(timerInterval);
+  document.getElementById('quiz-area').style.display = 'none';
+  document.getElementById('results-area').style.display = 'none';
+  document.getElementById('contest-picker').classList.remove('hidden');
+}
+
+// ── NOTES ─────────────────────────────────────────────────────
+async function loadNotes() {
+  try {
+    const res = await fetch('/api/student/get-notes');
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+    allNotes = data.notes;
+    buildCategoryFilter(allNotes);
+    renderNotes(activeFilter);
+  } catch (err) {
+    document.getElementById('notes-list').innerHTML =
+      `<div class="empty-state"><div class="e-icon">⚠️</div><div class="e-text" style="color:var(--red);">${err.message}</div></div>`;
+  }
+}
+
+function buildCategoryFilter(notes) {
+  const cats = [...new Set(notes.map(n => n.category))].filter(Boolean);
+  const filter = document.getElementById('cat-filter');
+  const allBtn = filter.querySelector('[data-cat="all"]') || filter.querySelector('.cat-btn');
+  filter.innerHTML = `<button class="cat-btn ${activeFilter === 'all' ? 'active' : ''}" data-cat="all" onclick="filterNotes('all', this)">All (${notes.length})</button>`;
+  cats.forEach(cat => {
+    const count = notes.filter(n => n.category === cat).length;
+    filter.innerHTML += `<button class="cat-btn ${activeFilter === cat ? 'active' : ''}" data-cat="${cat}" onclick="filterNotes('${cat}', this)">${cat} (${count})</button>`;
+  });
+}
+
+function filterNotes(cat, btn) {
+  activeFilter = cat;
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderNotes(cat);
+}
+
+function renderNotes(filter) {
+  const filtered = filter === 'all' ? allNotes : allNotes.filter(n => n.category === filter);
+  const container = document.getElementById('notes-list');
+  if (!filtered.length) {
+    container.innerHTML = `<div class="empty-state"><div class="e-icon">📓</div><div class="e-text">No notes in this category yet.</div></div>`;
+    return;
+  }
+
+  const catColors = {
+    Endocrinology: '#fb923c', Pulmonology: '#0ea5e9', Nephrology: '#14b8a6',
+    Cardiology: '#ef4444', Psychiatry: '#a855f7', General: '#94a3b8'
+  };
+
+  container.innerHTML = filtered.map(note => {
+    const preview = note.content.replace(/\n/g, ' ').substring(0, 120) + '...';
+    const date = note.created_at.substring(0, 10);
+    const color = catColors[note.category] || '#94a3b8';
+    return `<div class="note-card" id="note-${note.id}">
+      <div class="note-body">
+        <div class="note-top">
+          <span class="note-title">${note.title}</span>
+          <span class="note-cat-pill" style="color:${color};border-color:${color}22;">${note.category}</span>
+          ${note.case_id ? `<span class="note-case-id">${note.case_id}</span>` : ''}
+        </div>
+        <div class="note-preview">${preview}</div>
+        <div class="note-date">📅 ${date}</div>
+      </div>
+      <div class="note-actions">
+        <a href="/api/student/download-note/${note.id}" class="btn btn-secondary btn-sm" download>📥 Download</a>
+        <button class="btn btn-danger btn-sm" onclick="deleteNote(${note.id})">🗑</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function deleteNote(noteId) {
+  if (!confirm('Delete this note?')) return;
+  try {
+    const res = await fetch(`/api/student/delete-note/${noteId}`, { method: 'DELETE' });
+    const d = await res.json();
+    if (!res.ok) throw new Error(d.error);
+    allNotes = allNotes.filter(n => n.id !== noteId);
+    buildCategoryFilter(allNotes);
+    renderNotes(activeFilter);
+    showToast('🗑 Note deleted');
+  } catch (err) {
+    showToast('❌ ' + err.message, true);
+  }
+}
+
+// ── HOSPITAL NETWORK ──────────────────────────────────────────
+let currentPatient = null;
+
+function quickSelectPatient(patientId) {
+  document.getElementById('patient-id-input').value = patientId;
+  searchPatient();
+}
+
+async function searchPatient() {
+  const patientId = document.getElementById('patient-id-input').value.trim().toUpperCase();
+  if (!patientId) {
+    showToast('⚠️ Enter Patient ID', true);
+    return;
+  }
+
+  const loading = document.getElementById('hospital-loading');
+  const display = document.getElementById('hospital-patient-display');
+  loading.style.display = 'block';
+  display.style.display = 'none';
+
+  try {
+    const res = await fetch(`/api/student/get-patient/${patientId}`);
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+
+    currentPatient = data.patient;
+    
+    // Fetch AI learning summary
+    const summaryRes = await fetch(`/api/student/patient-learning/${patientId}`);
+    const summaryData = await summaryRes.json();
+    if (!summaryRes.ok) throw new Error(summaryData.error);
+
+    // Render patient data
+    renderPatientDisplay(currentPatient, summaryData);
+    loading.style.display = 'none';
+    display.style.display = 'block';
+  } catch (err) {
+    loading.style.display = 'none';
+    display.style.display = 'block';
+    document.getElementById('hospital-patient-display').innerHTML = 
+      `<div class="empty-state"><div class="e-icon">❌</div><div class="e-text">${err.message}</div></div>`;
+  }
+}
+
+function renderPatientDisplay(patient, summary) {
+  const report = summary.hospital_style_report || {};
+
+  // Patient info
+  document.getElementById('hospital-patient-name').textContent = patient.name;
+  document.getElementById('hospital-patient-mrn').textContent = `MRN: ${patient.mrn}`;
+  document.getElementById('hospital-patient-age').textContent = `${patient.age} y/o ${patient.gender}`;
+  document.getElementById('hospital-personal-id').textContent = report.personalId
+    ? `Hospital Personal ID: ${report.personalId}`
+    : '';
+  
+  // Diagnosis & Status
+  document.getElementById('hospital-diagnosis').textContent = report.diagnosis || patient.diagnosis;
+  document.getElementById('hospital-status').textContent = summary.current_status || report.currentStatus || patient.treatment_status;
+  document.getElementById('hospital-treatment-cats').textContent = (summary.treatment_categories || report.treatmentCategories || []).length
+    ? `Treatment Categories: ${(summary.treatment_categories || report.treatmentCategories).join(', ')}`
+    : '';
+
+  // Vitals
+  const vitalsHtml = Object.entries(patient.vital_signs || {})
+    .map(([k, v]) => `<div><strong>${k}:</strong> ${v}</div>`)
+    .join('');
+  document.getElementById('hospital-vitals').innerHTML = vitalsHtml;
+
+  // Labs
+  const labsSource = report.medicalTests || patient.recent_labs || {};
+  const labsHtml = Object.entries(labsSource)
+    .map(([k, v]) => `<div><strong>${k}:</strong> ${v}</div>`)
+    .join('');
+  document.getElementById('hospital-labs').innerHTML = labsHtml;
+
+  // Medications
+  const medSource = report.treatmentDone || patient.current_medications || [];
+  const medsHtml = medSource
+    .map(m => `<li>${m}</li>`)
+    .join('');
+  document.getElementById('hospital-meds').innerHTML = medsHtml;
+
+  // AI Summary
+  document.getElementById('hospital-ai-summary').textContent = summary.ai_summary;
+
+  // Resources
+  const resources = summary.resources || {};
+  const articlesHtml = (resources.articles || [])
+    .slice(0, 2)
+    .map(a => `<div><a href="${a.url}" target="_blank" style="color:var(--primary);">📄 ${a.title}</a></div>`)
+    .join('');
+  const videosHtml = (resources.youtube || [])
+    .slice(0, 2)
+    .map(v => `<div><a href="${v.url}" target="_blank" style="color:var(--primary);">▶️ ${v.title}</a></div>`)
+    .join('');
+  document.getElementById('hospital-resources').innerHTML = articlesHtml + videosHtml;
+}
+
+function savePatientAsNote() {
+  if (!currentPatient) return;
+
+  const personalIdText = document.getElementById('hospital-personal-id')?.textContent || '';
+  const categoryText = document.getElementById('hospital-treatment-cats')?.textContent || '';
+  
+  const title = `${currentPatient.name} - ${currentPatient.diagnosis}`;
+  const content = `Patient: ${currentPatient.name}
+MRN: ${currentPatient.mrn}
+Age: ${currentPatient.age} y/o ${currentPatient.gender}
+Diagnosis: ${currentPatient.diagnosis}
+Treatment Status: ${currentPatient.treatment_status}
+${personalIdText}
+${categoryText}
+
+Vital Signs:
+${Object.entries(currentPatient.vital_signs || {}).map(([k, v]) => `${k}: ${v}`).join('\n')}
+
+Recent Labs:
+${Object.entries(currentPatient.recent_labs || {}).map(([k, v]) => `${k}: ${v}`).join('\n')}
+
+Current Medications:
+${(currentPatient.current_medications || []).map(m => `- ${m}`).join('\n')}
+
+Procedures:
+${(currentPatient.procedures || []).map(p => `- ${p}`).join('\n')}`;
+
+  const payload = {
+    case_id: currentPatient.patient_id,
+    title: title,
+    category: 'Hospital Case Study',
+    content: content
+  };
+
+  fetch('/api/student/save-note', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  }).then(r => r.json()).then(d => {
+    if (d.error) throw new Error(d.error);
+    loadNotes(); // Refresh notes
+    showToast('✅ Patient case saved to My Notes!');
+  }).catch(err => showToast('❌ ' + err.message, true));
+}
+
+// ── AI MEDICAL CHATBOT ────────────────────────────────────────
+let chatHistory = [];   // [{role:'user'|'assistant', content:str}]
+
+function sendChip(btn) {
+  document.getElementById('chat-input').value = btn.textContent.trim();
+  // Hide chips after first use so chat area is clean
+  document.getElementById('chat-chips').style.display = 'none';
+  sendChat();
+}
+
+function clearChat() {
+  chatHistory = [];
+  const msgs = document.getElementById('chat-messages');
+  msgs.innerHTML = `<div class="chat-msg bot-msg">
+    <div class="chat-avatar bot-avatar">🤖</div>
+    <div>
+      <div class="chat-bubble bot-bubble">Chat cleared! Ask me anything about medicine 📚</div>
+    </div>
+  </div>`;
+  document.getElementById('chat-chips').style.display = 'flex';
+}
+
+function renderMarkdownLite(text) {
+  // Lightweight markdown: bold, italic, line breaks, bullets
+  return text
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/^• (.+)$/gm, '<span style="display:block;padding-left:8px;">• $1</span>')
+    .replace(/^- (.+)$/gm, '<span style="display:block;padding-left:8px;">• $1</span>')
+    .replace(/\n/g, '<br>');
+}
+
+async function sendChat() {
+  const input = document.getElementById('chat-input');
+  const sendBtn = document.getElementById('chat-send-btn');
+  const msgText = input.value.trim();
+  if (!msgText) return;
+
+  // Append user message to UI
+  input.value = '';
+  input.disabled = true;
+  sendBtn.disabled = true;
+  appendChatMessage('user', msgText, new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'}), '');
+
+  // Add to history and show typing indicator
+  chatHistory.push({ role: 'user', content: msgText });
+  document.getElementById('chat-typing').style.display = 'block';
+  scrollChatBottom();
+
+  try {
+    const res = await fetch('/api/student/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: chatHistory })
+    });
+    const data = await res.json();
+
+    document.getElementById('chat-typing').style.display = 'none';
+
+    if (!res.ok) throw new Error(data.error || 'Server error');
+
+    chatHistory.push({ role: 'assistant', content: data.reply });
+    appendChatMessage('bot', data.reply, data.timestamp, data.source);
+  } catch (err) {
+    document.getElementById('chat-typing').style.display = 'none';
+    appendChatMessage('bot', '⚠️ Could not get response: ' + err.message, '', '');
+  }
+
+  input.disabled = false;
+  sendBtn.disabled = false;
+  input.focus();
+  scrollChatBottom();
+}
+
+function appendChatMessage(role, text, time, source) {
+  const container = document.getElementById('chat-messages');
+  const isBot = role === 'bot';
+  const avatar = isBot ? '🤖' : '👤';
+  const avatarClass = isBot ? 'bot-avatar' : 'user-avatar';
+  const msgClass = isBot ? 'bot-msg' : 'user-msg';
+  const bubbleClass = isBot ? 'bot-bubble' : 'user-bubble';
+  const timeClass = isBot ? 'bot-time' : '';
+
+  const sourceHtml = (isBot && source) ?
+    `<span class="chat-source-badge">${source.startsWith('Gemini') ? '✨ Gemini AI' : '📋 Built-in'}</span>` : '';
+
+  const formattedText = isBot ? renderMarkdownLite(text) : escapeHtml(text);
+
+  const div = document.createElement('div');
+  div.className = `chat-msg ${msgClass}`;
+  div.innerHTML = `
+    <div class="chat-avatar ${avatarClass}">${avatar}</div>
+    <div>
+      <div class="chat-bubble ${bubbleClass}">${formattedText}</div>
+      <div class="chat-time ${timeClass}">${time}${sourceHtml ? ' · ' + sourceHtml : ''}</div>
+    </div>`;
+  container.appendChild(div);
+}
+
+function escapeHtml(text) {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/\n/g, '<br>');
+}
+
+function scrollChatBottom() {
+  const msgs = document.getElementById('chat-messages');
+  if (msgs) msgs.scrollTop = msgs.scrollHeight;
+}
+
+// ============ LOCAL STORAGE PERSISTENCE FOR FORM DATA ============
+const STORAGE_PREFIX = 'medlearn_form_';
+
+function saveFormData() {
+  // Save all input, textarea, and select fields to sessionStorage
+  document.querySelectorAll('input, textarea, select').forEach((field) => {
+    if (field.id && field.type !== 'password' && field.type !== 'hidden') {
+      const key = STORAGE_PREFIX + field.id;
+      sessionStorage.setItem(key, field.value);
+    }
+  });
+}
+
+function restoreFormData() {
+  // Restore all saved form data from sessionStorage on page load
+  document.querySelectorAll('input, textarea, select').forEach((field) => {
+    if (field.id && field.type !== 'password' && field.type !== 'hidden') {
+      const key = STORAGE_PREFIX + field.id;
+      const saved = sessionStorage.getItem(key);
+      if (saved !== null) {
+        field.value = saved;
+      }
+    }
+  });
+}
+
+function clearFormData() {
+  // Clear all saved form data
+  const keys = Object.keys(sessionStorage).filter(k => k.startsWith(STORAGE_PREFIX));
+  keys.forEach(k => sessionStorage.removeItem(k));
+  console.log('Form data cleared. Please manually refresh the page to see changes.');
+}
+
+// Auto-save form data whenever any input changes
+document.addEventListener('change', saveFormData);
+document.addEventListener('input', saveFormData);
+document.addEventListener('blur', saveFormData, true);
+
+// Restore form data when page loads
+window.addEventListener('DOMContentLoaded', restoreFormData);
+restoreFormData(); // Also call immediately in case DOMContentLoaded has already fired
+
+loadPatientQrGallery();
+</script>
+</body>
+</html>

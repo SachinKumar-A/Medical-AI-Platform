@@ -1,0 +1,100 @@
+--- Slide 1 ---
+M e d N o v a
+AI Powered Healthcare Ecosystem
+--- Slide 2 ---
+About us
+At MedNova, we are building an AI-powered healthcare ecosystem that connects doctors, patients, and medical students on a single intelligent platform. Our system helps doctors make faster diagnostic decisions, enables patients to manage their health digitally, and provides medical students with real clinical learning experiences. By combining AI diagnostics, digital medical records, and health monitoring, MedNova aims to improve healthcare efficiency and accessibility.
+2
+--- Slide 3 ---
+Problem
+Market Gap
+Healthcare systems lack an integrated digital platform that connects doctors, patients, and medical students. Medical data, diagnostics, and education tools are scattered across multiple systems, creating inefficiencies in treatment and learning.
+Costs
+Manual record management, delayed diagnosis, and lack of real-time patient monitoring increase hospital costs and reduce healthcare efficiency.
+Customers
+Doctors require faster diagnostic support, patients need easier access to medical records and health monitoring, and medical students need practical learning from real clinical cases. Current platforms fail to serve all three groups in one ecosystem.
+Usability
+Doctors need faster access to patient data, patients need simple digital health management, and students require structured learning tools that connect theory with real medical practice.
+Financials
+Hospitals spend significant resources on inefficient workflows, repeated tests, and delayed specialist consultations, increasing operational costs and patient treatment expenses.
+
+3
+--- Slide 4 ---
+Solution
+Close the gap
+Our AI platform connects doctors, patients, and medical students in one ecosystem, enabling faster diagnosis, digital medical records, and real-time healthcare insights.
+
+Cost savings
+AI-assisted diagnosis and digital record management reduce unnecessary tests, consultation delays, and operational costs for hospitals and patients.
+Target Audience
+Doctors, hospitals, medical students, and health-conscious individuals who need smarter diagnosis, better patient management, and practical medical learning.
+Easy to use
+A simple digital platform allows doctors to analyze reports, patients to access medical records, and students to learn from real clinical cases in one place.
+4
+--- Slide 5 ---
+Product Overview
+Unique
+AI-powered platform connecting doctors, patients, and medical students in one healthcare ecosystem.
+Tested
+Designed to solve real hospital challenges like delayed diagnosis and fragmented patient data.
+First to market
+Combines AI diagnosis support, digital medical records, and medical learning in a single system.
+Authentic
+Built to assist doctors in faster decisions, patients in health monitoring, and students in practical learning.
+
+5
+--- Slide 6 ---
+Business model
+SUBSCRIPTION
+Hospitals, doctors, and medical colleges subscribe to access AI diagnosis tools, patient record systems, and medical learning platforms.
+PLATFORM SERVICES
+Patients can use premium features such as health monitoring, AI health reports, and personalized lifestyle recommendations.
+Design
+Collaboration with hospitals and medical colleges to integrate the platform into healthcare services and medical education systems.
+
+6
+--- Slide 7 ---
+Market overview
+$180B - 2030
+
+Global AI healthcare market expected by 2030. Growing demand for AI-assisted diagnosis and digital healthcare systems
+$50B - 2028
+
+Hospitals adopting AI tools for patient management and diagnostics and Serviceable available market
+$1B - 2026
+
+Target market including hospitals, doctors, and medical colleges adopting AI healthcare platforms
+7
+--- Slide 8 ---
+Our competition
+MEDNOVA​
+​Our platform integrates AI diagnosis support, digital patient records, and medical education in one ecosystem.
+Provides faster clinical decision support for doctors, health monitoring for patients, and practical learning tools for medical students.
+Simple interface and AI automation reduce complexity in hospital workflows.
+Competitors​
+Practo / ZocdocFocus mainly on doctor appointment booking.​
+Fitbit / Apple HealthProvide health tracking but lack clinical diagnosis support.
+Amboss / OsmosisOffer medical learning tools but no integration with real hospital cases.
+8
+--- Slide 9 ---
+Traction
+Forecasting for success​
+Metrics
+Revenue by year
+9
+--- Slide 10 ---
+Meet the team
+Takuma Hayashi​​
+President​
+Mirjam Nilsson​​
+Chief Executive Officer​
+Flora Berggren​​
+Chief Operations Officer​
+Rajesh Santoshi​​
+VP Marketing​
+10
+--- Slide 11 ---
+Summary
+MedNova is an AI-powered healthcare platform that connects doctors, patients, and medical students in one ecosystem, enabling faster diagnosis, digital medical records, intelligent health monitoring, and practical medical learning to improve overall healthcare efficiency.
+
+11

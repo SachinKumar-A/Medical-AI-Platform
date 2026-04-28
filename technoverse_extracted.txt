@@ -1,0 +1,107 @@
+--- Slide 1 ---
+1
+© 2025–2027 Cognizant | Private
+--- Slide 2 ---
+Team Members:	A.Sachin Kumar	R.Srinivas	V.S.Sowmiyaa	V.Thanuja
+
+© 2026-2027 Cognizant | Private
+Team Name: SFINIVAS
+--- Slide 3 ---
+Problem Statement
+© 2026–2027 Cognizant | Private
+
+Delayed diagnosis, fragmented medical records, and limited real-time collaboration between doctors, patients, and medical students reduce the efficiency and quality of healthcare delivery.
+
+Market Gap: Healthcare systems lack an integrated digital platform that connects doctors, patients, and medical students. Medical data, diagnostics, and education tools are scattered across multiple systems, creating inefficiencies in treatment and learning.
+Costs: Manual record management, delayed diagnosis, and lack of real-time patient monitoring increase hospital costs and reduce healthcare efficiency.
+Customers: Doctors require faster diagnostic support, patients need easier access to medical records and health monitoring, and medical students need practical learning from real clinical cases. Current platforms fail to serve all three groups in one ecosystem.
+Financials: Hospitals spend significant resources on inefficient workflows, repeated tests, and delayed specialist consultations, increasing operational costs and patient treatment expenses.
+
+
+
+--- Slide 4 ---
+Solution
+An AI-powered integrated platform that connects doctors, patients, and medical students to enable faster diagnosis, secure access to digital health records, and real-time collaboration.
+
+Close the gap: Our AI platform connects doctors, patients, and medical students in one ecosystem, enabling faster diagnosis, digital medical records, and real-time healthcare insights.
+Cost savings: AI-assisted diagnosis and digital record management reduce unnecessary tests, consultation delays, and operational costs for hospitals and patients.
+Target Audience: Doctors, hospitals, medical students, and health-conscious individuals who need smarter diagnosis, better patient management, and practical medical learning.
+Easy to use: A simple digital platform allows doctors to analyze reports, patients to access medical records, and students to learn from real clinical cases in one place.
+Value proposition: Improves healthcare efficiency with up to 80% faster diagnosis, 10% fewer errors, reduced costs, and fully digital, scalable, and eco-friendly patient management.
+
+
+
+
+--- Slide 5 ---
+<idea description> | Business Plan (1/2)
+
+
+
+© 2026–2027 Cognizant | Private
+
+Healthcare systems suffer from poor communication and fragmented data, making it hard for patients to understand reports while limiting real-world learning for students and structured data access for researchers.
+Target Users / Stakeholders: Doctors, patients, medical students, and researchers require efficient workflows, simplified health insights, real-world learning, and access to secure, large-scale healthcare data.
+Technical Details : Backend built using Python Flask with Cloud LLM APIs (Gemini/Groq), leveraging NLP for medical text translation and structuring, along with a secure database and anonymization pipeline.
+Innovation : Data Flywheel Model enables a single data input to serve multiple users, transforming hospital cases into real-time learning modules with AI-generated patient-friendly summaries while integrating healthcare, education, and research in one platform.
+
+--- Slide 6 ---
+<idea description> | Business Plan (1/2)
+
+
+
+© 2026–2027 Cognizant | Private
+
+Market Potential : Growing demand for AI-driven healthcare and digital solutions, increasing need for personalized patient engagement, expanding medical EdTech market, and rising demand for real-world data in pharmaceutical research. 
+Benefits:
+Simplifies doctor–patient communication.
+Provides affordable real-world case learning for students.
+Efficiency & Flexibility : One platform serving multiple stakeholders (doctors, patients, students, scientists). Modular design allows easy expansion of features.
+Scalability: Cloud-native architecture ensures seamless scaling. AI-driven modules adaptable to different healthcare institutions.
+Social Impact : Democratizes healthcare literacy, enhances student competency with real‑world cases, and accelerates drug discovery through shared anonymized data.
+
+
+
+
+
+
+--- Slide 7 ---
+
+Financials & Timelines | Business Plan (2/2)
+Investments
+Returns
+© 2026–2027 Cognizant | Private
+
+💰  Overall Investment: ₹80 Lakhs – ₹1.6 Crore (~$100K – $200K) for first 12–18 months
+🧩   Cost Breakdown:
+ ☁   1. Cloud & Infrastructure (20–25%)	💸 ₹15L – ₹30L
+🤖    2. AI Development (15–20%)	💸 ₹12L – ₹25L  
+💻    3. Development Team (30–40%) 	💸 ₹25L – ₹60L
+⚖    4. Legal & Compliance (10–15%) 	💸 ₹8L – ₹20L
+🤝    5. Partnerships & Sales (10–15%) 	💸 ₹8L – ₹20L
+🧪    6. Testing & Deployment (5–10%) 	💸 ₹5L – ₹10L
+
+
+
+💰  Overall Returns: 📈 Growth Projection
+Year 1: 5–10 hospitals,  2,000+ students          	👉 Revenue: ₹40L – ₹80L
+Year 2: 30+ hospitals, 10,000+ users                     👉 Revenue: ₹3Cr – ₹6Cr
+Year 3: 100+ hospitals, research access added 	👉 Revenue: ₹15Cr+		             
+--- Slide 8 ---
+
+Financials & Timelines | Business Plan (2/2)
+Timelines
+© 2026–2027 Cognizant | Private
+
+  ⏳ Overall Project Timeline:
+  Phase 1: Planning & MVP Development (Month 1–3)	
+Tasks: Finalize features, Setup backend & database, Build frontend, Integrate AI.
+  Phase 2: Testing & Pilot (Month 4–5)
+Tasks: Pilot testing, Feedback collection, AI improvement, Bug fixing.
+  Phase 3: Hospital Integration (Month 6–8)
+Tasks: Patient digital health wallet, Implement access control, Security & Privacy, Start onboarding doctors.
+  Phase 4: Scaling & Monetization (Month 9–10)
+Tasks: Launch subscription plans, Expand to multiple hospitals, Improve performance & scalability, Add       	analytics dashboard.
+--- Slide 9 ---
+Thank you
+
+© 2026–2027 Cognizant | Private

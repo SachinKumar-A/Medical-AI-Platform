@@ -1,0 +1,1592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CareFlow Portal</title>
+    <style>
+        :root {
+            --bg: #f4f8ff;
+            --panel: #ffffff;
+            --ink: #11233a;
+            --muted: #4f6379;
+            --line: #d4e1ef;
+            --brand: #0f766e;
+            --brand-2: #0b5cab;
+            --low: #166534;
+            --mod: #92400e;
+            --high: #991b1b;
+            --private: #6b7280;
+            --pending: #a16207;
+            --granted: #14532d;
+            --radius: 16px;
+            --shadow: 0 16px 40px rgba(17, 35, 58, 0.08);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at top left, rgba(15, 118, 110, 0.18), transparent 25%),
+                radial-gradient(circle at top right, rgba(11, 92, 171, 0.14), transparent 25%),
+                var(--bg);
+            min-height: 100vh;
+        }
+
+        .wrap { max-width: 1240px; margin: 0 auto; padding: 24px 16px 40px; }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .logout { color: var(--brand-2); text-decoration: none; font-weight: 700; }
+
+        .hero {
+            background: linear-gradient(130deg, #0f766e, #0b5cab 60%, #164e63);
+            color: #fff;
+            border-radius: 24px;
+            padding: 26px;
+            box-shadow: 0 22px 44px rgba(11, 92, 171, 0.25);
+        }
+
+        .hero h1 { margin: 0 0 8px; font-size: 30px; }
+        .hero p { margin: 0; line-height: 1.5; max-width: 880px; }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+            align-items: center;
+        }
+
+        .tab-btn {
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+            border-radius: 999px;
+            padding: 8px 14px;
+            cursor: pointer;
+            font-weight: 700;
+            width: auto;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+        }
+
+        .tab-btn.active {
+            background: #fff;
+            color: #0b5cab;
+        }
+
+        .panel {
+            margin-top: 18px;
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            padding: 18px;
+            box-shadow: var(--shadow);
+        }
+
+        .grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px; }
+        .stack { display: grid; gap: 16px; }
+
+        .title { margin: 0 0 8px; }
+        .sub { color: var(--muted); font-size: 14px; line-height: 1.45; }
+
+        .form-grid {
+            margin-top: 12px;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .full { grid-column: 1 / -1; }
+
+        label { display: block; margin-bottom: 4px; font-size: 13px; font-weight: 700; color: #344b63; }
+
+        input, select, textarea, button {
+            width: 100%;
+            border-radius: 12px;
+            font: inherit;
+        }
+
+        input, select, textarea {
+            border: 1px solid var(--line);
+            padding: 10px 12px;
+            background: #fbfdff;
+            color: var(--ink);
+        }
+
+        textarea { min-height: 90px; resize: vertical; }
+
+        button {
+            border: none;
+            background: linear-gradient(120deg, var(--brand), var(--brand-2));
+            color: #fff;
+            font-weight: 700;
+            padding: 11px 12px;
+            cursor: pointer;
+        }
+
+        .secondary { background: linear-gradient(120deg, #4b5563, #1f2937); }
+
+        .row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+        .row button { width: auto; min-width: 160px; }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .metric {
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 12px;
+            background: linear-gradient(180deg, #f7fbff, #ecf4ff);
+        }
+
+        .metric .k {
+            font-size: 12px;
+            color: #5d7490;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            font-weight: 700;
+        }
+
+        .metric .v {
+            font-size: 14px;
+            margin-top: 6px;
+            font-weight: 700;
+            color: #0758a7;
+            line-height: 1.2;
+            text-transform: none;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .metric .v.source-v {
+            font-size: 13px;
+            line-height: 1.2;
+            font-weight: 700;
+            text-transform: none;
+        }
+
+        .metric .v.status-v {
+            text-transform: uppercase;
+            font-size: 13px;
+        }
+
+        .risk-pill, .access-pill {
+            display: inline-block;
+            margin-top: 6px;
+            border-radius: 999px;
+            padding: 7px 12px;
+            font-size: 14px;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .risk-low { background: #daf7e5; color: var(--low); }
+        .risk-moderate { background: #efe2b8; color: #92400e; }
+        .risk-high { background: #f8d7d7; color: var(--high); }
+        .risk-danger { background: #fecaca; color: #7f1d1d; }
+        .risk-emergency { background: #991b1b; color: #ffffff; }
+
+        .access-private { background: #d8dbe1; color: #5a6574; }
+        .access-pending { background: #fef3c7; color: var(--pending); }
+        .access-granted { background: #dcfce7; color: var(--granted); }
+
+        .box {
+            margin-top: 10px;
+            border-radius: 12px;
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 14px;
+            min-height: 120px;
+            font-family: Consolas, "Courier New", monospace;
+            white-space: pre-wrap;
+            line-height: 1.45;
+        }
+
+        .report-view {
+            margin-top: 10px;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            background: #ffffff;
+            color: #13263d;
+            padding: 14px;
+        }
+
+        .report-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+
+        .report-id {
+            font-family: Consolas, "Courier New", monospace;
+            font-weight: 700;
+            color: #0b5cab;
+        }
+
+        .report-section {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #dce6f3;
+            background: #f8fbff;
+        }
+
+        .report-section h4 {
+            margin: 0 0 8px;
+            font-size: 14px;
+            color: #26425e;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .report-list {
+            margin: 0;
+            padding-left: 18px;
+            line-height: 1.5;
+        }
+
+        .mini-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 8px;
+        }
+
+        .mini-kv {
+            border: 1px solid #d6e3f3;
+            border-radius: 8px;
+            background: #fff;
+            padding: 8px;
+            font-size: 13px;
+        }
+
+        .list { display: grid; gap: 10px; margin-top: 10px; }
+
+        .item {
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 12px;
+            background: #fcfdff;
+        }
+
+        .item-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .mono { font-family: Consolas, "Courier New", monospace; }
+
+        .hidden { display: none; }
+
+        @media (max-width: 980px) {
+            .grid { grid-template-columns: 1fr; }
+            .metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+
+        @media (max-width: 680px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .metric-grid { grid-template-columns: 1fr; }
+            .mini-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <div class="topbar">
+            <div>Logged in as <strong>{{ user_email }}</strong> ({{ user_role }})</div>
+            <a class="logout" href="/auth/logout">Logout</a>
+        </div>
+
+        {% if user_role == 'public' %}
+        <section class="hero">
+            <h1>Public Portal: Fitness + Hospital</h1>
+            <p>
+                This release separates your wellness flow into two sections. Fitness reports use FIT IDs, while hospital records use HOSP IDs and personal IDs. Doctor assignment is only by doctor ID, with search and filtering support.
+            </p>
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="fitness">Fitness</button>
+                <button class="tab-btn" data-tab="doctor-search">Doctor Search</button>
+                <button class="tab-btn" data-tab="hospital">Hospital</button>
+                <button class="tab-btn" data-tab="fit-lookup">FIT Report Lookup</button>
+                <button class="tab-btn" data-tab="hospital-lookup">Hospital Report Lookup</button>
+                <button class="tab-btn" data-tab="doctor-chat">Doctor Chat</button>
+                <button class="tab-btn" data-tab="online-discussion">Online Discussion</button>
+                <button class="tab-btn" data-tab="notifications">Notification Centre</button>
+                <button class="tab-btn" data-tab="doctor-suggestions">Doctor Suggestions</button>
+                
+            </div>
+        </section>
+
+        <section id="tab-fitness" class="panel">
+            <div class="grid">
+                <div class="stack">
+                    <article>
+                        <h2 class="title">Fitness Metrics & FIT Report</h2>
+                        <div class="sub">Generate a fitness report and FIT ID from wearable/home metrics.</div>
+                        <div class="form-grid">
+                            <div>
+                                <label for="provider">AI Provider</label>
+                                <select id="provider">
+                                    <option value="grok">Groq AI</option>
+                                    <option value="gemini">Gemini</option>
+                                    <option value="mock">Built-in</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="weight">Weight</label>
+                                <input id="weight" placeholder="70 kg" />
+                            </div>
+                            <div><label for="restingHeartRate">Resting Heart Rate</label><input id="restingHeartRate" placeholder="74 bpm" /></div>
+                            <div><label for="bloodPressure">Blood Pressure</label><input id="bloodPressure" placeholder="118/76 mmHg" /></div>
+                            <div><label for="sleepHours">Sleep Hours</label><input id="sleepHours" placeholder="7.5" /></div>
+                            <div><label for="stepsPerDay">Steps per Day</label><input id="stepsPerDay" placeholder="8500" /></div>
+                            <div><label for="exerciseMinutes">Exercise Minutes</label><input id="exerciseMinutes" placeholder="35" /></div>
+                            <div><label for="waterIntake">Water Intake</label><input id="waterIntake" placeholder="2.5" /></div>
+                            <div class="full"><label for="fastingGlucose">Fasting Glucose</label><input id="fastingGlucose" placeholder="96 mg/dL" /></div>
+                        </div>
+                        <div class="row">
+                            <button id="generateBtn">Generate FIT Report</button>
+                            <button id="refreshBtn" class="secondary">Refresh FIT IDs</button>
+                        </div>
+                    </article>
+
+                </div>
+
+                <div class="stack">
+                    <article>
+                        <h3 class="title">Current FIT Snapshot</h3>
+                        <div id="snapshotGrid" class="metric-grid">
+                            <div class="metric"><div class="k">FIT ID</div><div class="v mono">-</div></div>
+                            <div class="metric"><div class="k">Risk Level</div><div class="v status-v">-</div></div>
+                            <div class="metric"><div class="k">Access</div><div class="v status-v">-</div></div>
+                            <div class="metric"><div class="k">Source</div><div class="v source-v">-</div></div>
+                        </div>
+                        <div id="riskPill" class="risk-pill">Risk: -</div>
+                        <div id="accessPill" class="access-pill">Access: -</div>
+                        <div id="summaryOut" class="report-view">Generate a fitness report to see AI report format.</div>
+                    </article>
+
+                    <article>
+                        <h3 class="title">My FIT IDs</h3>
+                        <div id="recordList" class="list"><div class="item">No records yet.</div></div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section id="tab-doctor-search" class="panel hidden">
+            <h2 class="title">Doctor Search & Assignment (ID only)</h2>
+            <div class="sub">Search by doctor ID/name, filter by category, and rank by top/new. Assignment is accepted only by doctor ID.</div>
+            <div class="form-grid">
+                <div><label for="docQuery">Search</label><input id="docQuery" placeholder="DOC001 or Asha" /></div>
+                <div>
+                    <label for="docCategory">Category</label>
+                    <select id="docCategory"><option value="all">All</option></select>
+                </div>
+                <div>
+                    <label for="docSort">Sort</label>
+                    <select id="docSort">
+                        <option value="top">Top Rated IDs</option>
+                        <option value="new">New IDs</option>
+                    </select>
+                </div>
+                <div><label for="requestPublicId">FIT ID</label><input id="requestPublicId" placeholder="FIT001" /></div>
+                <div><label for="doctorId">Doctor ID</label><input id="doctorId" placeholder="DOC001" /></div>
+                <div class="full"><label for="requestNote">Request Note</label><textarea id="requestNote" placeholder="Please review my report and enable access."></textarea></div>
+            </div>
+            <div class="row">
+                <button id="doctorSearchBtn" class="secondary">Search Doctors</button>
+                <button id="requestBtn">Send Access Request</button>
+            </div>
+            <div id="doctorSearchOut" class="report-view">Doctor search results will appear here.</div>
+            <div id="requestOut" class="report-view">No request submitted yet.</div>
+        </section>
+
+        <section id="tab-hospital" class="panel hidden">
+            <h2 class="title">Hospital Access Session</h2>
+            <div class="sub">Set hospital login context using hospital name or hospital ID. Report loading is kept in a separate Report Lookup section.</div>
+            <div class="form-grid">
+                <div><label for="hospitalSessionName">Hospital Name</label><input id="hospitalSessionName" placeholder="Central Medical Hospital" /></div>
+                <div><label for="hospitalSessionId">Hospital ID</label><input id="hospitalSessionId" placeholder="HOSP1001" /></div>
+            </div>
+            <div class="row"><button id="saveHospitalSessionBtn">Save Hospital Session</button></div>
+            <div id="hospitalSessionOut" class="report-view">No hospital session set yet.</div>
+        </section>
+
+        <section id="tab-fit-lookup" class="panel hidden">
+            <h2 class="title">FIT Report Lookup</h2>
+            <div class="sub">This navigation is dedicated only for FIT report loading.</div>
+            <div class="form-grid">
+                <div class="full"><label for="lookupId">FIT ID</label><input id="lookupId" placeholder="FIT001" /></div>
+            </div>
+            <div class="row"><button id="lookupBtn" class="secondary">Load FIT Report</button></div>
+            <div id="lookupOut" class="report-view">No FIT report loaded.</div>
+        </section>
+
+        <section id="tab-hospital-lookup" class="panel hidden">
+            <h2 class="title">Hospital Report Lookup</h2>
+            <div class="sub">Load hospital report by hospital and personal ID, then connect with national/international doctors for treatment, online, or video collaboration.</div>
+            <div class="form-grid">
+                <div><label for="hospitalName">Hospital Name</label><input id="hospitalName" placeholder="Central Medical Hospital" /></div>
+                <div><label for="hospitalId">Hospital ID</label><input id="hospitalId" placeholder="HOSP1001" /></div>
+                <div class="full"><label for="personalId">Personal ID</label><input id="personalId" placeholder="PID1001" /></div>
+            </div>
+            <div class="row">
+                <button id="hospitalFetchBtn">Load Hospital Report</button>
+            </div>
+            <div id="hospitalOut" class="report-view">No hospital report loaded.</div>
+
+            <article style="margin-top:12px;">
+                <h3 class="title">Doctor Collaboration For Hospital Report</h3>
+                <div class="sub">Find doctors registered in the app by scope and interaction mode for treatment planning, online opinion, or live video interaction.</div>
+                <div class="form-grid">
+                    <div><label for="hospitalDocQuery">Search Doctor</label><input id="hospitalDocQuery" placeholder="DOC002 or Rahul" /></div>
+                    <div>
+                        <label for="hospitalDocScope">Registration Scope</label>
+                        <select id="hospitalDocScope">
+                            <option value="all">All</option>
+                            <option value="national">National</option>
+                            <option value="international">International</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="hospitalDocMode">Interaction Type</label>
+                        <select id="hospitalDocMode">
+                            <option value="treatment">Treatment Discussion</option>
+                            <option value="online">Online Suggestion</option>
+                            <option value="video">Video Interaction</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row"><button id="hospitalDoctorSearchBtn" class="secondary">Search Doctors For This Report</button></div>
+                <div id="hospitalDoctorOut" class="report-view">Load a hospital report first, then search doctors.</div>
+            </article>
+        </section>
+
+        <section id="tab-doctor-chat" class="panel hidden">
+            <h2 class="title">Doctor Chat</h2>
+            <div class="sub">Keep chat separate. Discuss your case first with accepted doctor, then ask doctor to create/share meeting ID.</div>
+
+            <div class="form-grid">
+                <div>
+                    <label for="chatPublicId">Accepted FIT ID</label>
+                    <select id="chatPublicId"><option value="">Select granted FIT ID</option></select>
+                </div>
+                <div class="row" style="align-items:end;">
+                    <button id="refreshChatSessionsBtn" class="secondary">Refresh Chat Sessions</button>
+                </div>
+            </div>
+
+            <div id="chatDoctorInfo" class="report-view" style="margin-top:10px;">No accepted doctor session loaded yet.</div>
+
+            <article style="margin-top:12px;">
+                <h3 class="title">Doctor Chat (AI-assisted)</h3>
+                <div id="onlineChatLog" class="report-view" style="max-height:260px;overflow:auto;">Chat will appear here after selecting accepted FIT ID.</div>
+                <div class="form-grid" style="margin-top:10px;">
+                    <div class="full"><label for="onlineChatInput">Message</label><textarea id="onlineChatInput" placeholder="Type your question for the doctor..."></textarea></div>
+                </div>
+                <div class="row"><button id="sendOnlineChatBtn">Send Message</button></div>
+            </article>
+        </section>
+
+        <section id="tab-online-discussion" class="panel hidden">
+            <h2 class="title">Online Discussion</h2>
+            <div class="sub">Join only with meeting ID shared by doctor after your chat discussion.</div>
+
+            <div class="form-grid">
+                <div>
+                    <label for="discussionPublicId">Accepted FIT ID</label>
+                    <select id="discussionPublicId"><option value="">Select granted FIT ID</option></select>
+                </div>
+                <div class="row" style="align-items:end;">
+                    <button id="refreshDiscussionSessionsBtn" class="secondary">Refresh Discussion Sessions</button>
+                </div>
+            </div>
+
+            <div id="discussionDoctorInfo" class="report-view" style="margin-top:10px;">No accepted doctor session loaded yet.</div>
+
+            <article style="margin-top:12px;">
+                <h3 class="title">Online Meeting Connect</h3>
+                <div class="form-grid">
+                    <div class="full"><label for="meetingIdInput">Meeting ID (from doctor)</label><input id="meetingIdInput" placeholder="CONSULT-FIT001-001" /></div>
+                </div>
+                <div class="row"><button id="connectMeetingBtn">Connect Video Consultation</button></div>
+                <div id="meetingConnectOut" class="report-view">No meeting connection yet.</div>
+            </article>
+        </section>
+
+        <section id="tab-notifications" class="panel hidden">
+            <h2 class="title">Notification Centre</h2>
+            <div class="sub">Receive doctor request status updates and grant notifications.</div>
+            <div class="row"><button id="refreshNotiBtn" class="secondary">Refresh Notifications</button></div>
+            <div id="notiList" class="list"><div class="item">No notifications yet.</div></div>
+        </section>
+        
+        <section id="tab-doctor-suggestions" class="panel hidden">
+            <h2 class="title">Doctor Suggestions & Treatment Plans</h2>
+            <div class="sub">View treatment recommendations and medical suggestions sent by your assigned doctors.</div>
+            <div class="row"><button id="refreshSuggestionsBtn" class="secondary">Refresh Suggestions</button></div>
+            <div id="suggestionsList" class="list"><div class="item">No doctor suggestions yet.</div></div>
+        </section>
+
+        {% else %}
+        <section class="hero">
+            <h1>Doctor Workbench (Updated Flow)</h1>
+            <p>Step-by-step flow: pick request -> grant access -> analyze FIT -> send categorized treatment -> update meeting ID.</p>
+        </section>
+
+        <section class="panel">
+            <div class="grid">
+                <div class="stack">
+                    <article>
+                        <h2 class="title">Doctor AI Assistant</h2>
+                        <div class="form-grid">
+                            <div><label for="docProvider">AI Provider</label><select id="docProvider"><option value="grok">Groq AI</option><option value="gemini">Gemini</option><option value="mock">Built-in</option></select></div>
+                            <div><label for="doctorName">Doctor Name</label><input id="doctorName" value="{{ user_email }}" /></div>
+                            <div class="full"><label for="docCase">Case Note</label><textarea id="docCase" placeholder="Write case context..."></textarea></div>
+                        </div>
+                        <div class="row"><button id="docBtn">Generate Doctor Assist</button></div>
+                        <div id="docOut" class="box">Doctor AI output appears here.</div>
+                    </article>
+
+                    <article>
+                        <h3 class="title">Access Queue</h3>
+                        <div class="row"><button id="queueRefreshBtn" class="secondary">Refresh Queue</button></div>
+                        <div id="queueList" class="list"><div class="item">No pending requests.</div></div>
+                    </article>
+
+                    <article>
+                        <h3 class="title">Doctor Workflow</h3>
+                        <div class="report-view">
+                            <div>1. Refresh queue and choose FIT ID.</div>
+                            <div>2. Grant access and doctor note.</div>
+                            <div>3. Load FIT record and run AI analysis.</div>
+                            <div>4. Send category-based treatment suggestion.</div>
+                            <div>5. Share or update meeting ID for online discussion.</div>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="stack">
+                    <article>
+                        <h3 class="title">Grant Access</h3>
+                        <div class="form-grid">
+                            <div class="full"><label for="grantPublicId">FIT ID</label><input id="grantPublicId" placeholder="FIT001" /></div>
+                            <div class="full"><label for="grantMeetingId">Online Meeting ID (optional)</label><input id="grantMeetingId" placeholder="CONSULT-FIT001-001" /></div>
+                            <div class="full"><label for="doctorNote">Doctor Note</label><textarea id="doctorNote" placeholder="Access approved for follow-up."></textarea></div>
+                        </div>
+                        <div class="row"><button id="grantBtn">Grant Access</button></div>
+                        <div id="grantOut" class="box">Grant response appears here.</div>
+                    </article>
+
+                    <article>
+                        <h3 class="title">Create / Update Meeting Session ID</h3>
+                        <div class="form-grid">
+                            <div class="full"><label for="doctorMeetingPublicId">FIT ID</label><input id="doctorMeetingPublicId" placeholder="FIT001" /></div>
+                            <div class="full"><label for="doctorMeetingId">Meeting ID</label><input id="doctorMeetingId" placeholder="CONSULT-FIT001-001" /></div>
+                        </div>
+                        <div class="row"><button id="updateMeetingBtn" class="secondary">Save Meeting Session</button></div>
+                        <div id="meetingUpdateOut" class="box">Meeting session update response appears here.</div>
+                    </article>
+
+                    <article>
+                        <h3 class="title">Record Lookup</h3>
+                        <div class="form-grid">
+                            <div class="full"><label for="doctorLookupId">FIT ID</label><input id="doctorLookupId" placeholder="FIT001" /></div>
+                        </div>
+                        <div class="row"><button id="doctorLookupBtn" class="secondary">Load FIT Record</button></div>
+                        <div id="doctorLookupOut" class="box">No record loaded.</div>
+                    </article>
+
+                    <article>
+                        <h3 class="title">AI Report Analysis</h3>
+                        <div class="sub">Analyze FIT report with AI support and get structured clinical guidance.</div>
+                        <div class="form-grid">
+                            <div>
+                                <label for="docAnalyzeProvider">AI Provider</label>
+                                <select id="docAnalyzeProvider">
+                                    <option value="grok">Groq AI</option>
+                                    <option value="gemini">Gemini</option>
+                                    <option value="mock">Built-in</option>
+                                </select>
+                            </div>
+                            <div><label for="docAnalyzeId">FIT ID</label><input id="docAnalyzeId" placeholder="FIT001" /></div>
+                        </div>
+                        <div class="row"><button id="docAnalyzeBtn" class="secondary">Analyze Report</button></div>
+                        <div id="docAnalyzeOut" class="box">AI report analysis appears here.</div>
+                    </article>
+
+                    <article>
+                        <h3 class="title">Send Treatment Suggestion</h3>
+                        <div class="sub">Send structured treatment and follow-up instructions to patient by FIT ID.</div>
+                        <div class="form-grid">
+                            <div><label for="treatmentPublicId">FIT ID</label><input id="treatmentPublicId" placeholder="FIT001" /></div>
+                            <div><label for="treatmentDoctorId">Doctor ID</label><input id="treatmentDoctorId" placeholder="DOC001" /></div>
+                            <div><label for="treatmentCategory">Category</label><input id="treatmentCategory" placeholder="Cardiology / Pulmonology / Endocrinology" /></div>
+                            <div><label for="treatmentFollowup">Follow-up Date</label><input id="treatmentFollowup" type="date" /></div>
+                            <div class="full"><label for="treatmentPlan">Treatment Plan</label><textarea id="treatmentPlan" placeholder="Treatment strategy and plan..."></textarea></div>
+                            <div class="full"><label for="treatmentMedications">Medications</label><textarea id="treatmentMedications" placeholder="Medication instructions..."></textarea></div>
+                        </div>
+                        <div class="row"><button id="sendTreatmentBtn">Send Suggestion</button></div>
+                        <div id="treatmentSendOut" class="box">Treatment suggestion response appears here.</div>
+                    </article>
+                </div>
+            </div>
+        </section>
+        {% endif %}
+    </div>
+
+    <script>
+        function pretty(v) { return JSON.stringify(v, null, 2); }
+
+        async function getJson(url) {
+            const res = await fetch(url);
+            const data = await res.json();
+            if (!res.ok) {
+                const err = new Error(data.error || 'Request failed');
+                err.data = data;
+                err.status = res.status;
+                throw err;
+            }
+            return data;
+        }
+
+        async function postJson(url, payload) {
+            const res = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const data = await res.json();
+            if (!res.ok) {
+                const err = new Error(data.error || 'Request failed');
+                err.data = data;
+                err.status = res.status;
+                throw err;
+            }
+            return data;
+        }
+
+        function riskClass(level) {
+            const v = String(level || '').toUpperCase();
+            if (v === 'LOW') return 'risk-pill risk-low';
+            if (v === 'EMERGENCY') return 'risk-pill risk-emergency';
+            if (v === 'DANGER') return 'risk-pill risk-danger';
+            if (v === 'HIGH') return 'risk-pill risk-high';
+            return 'risk-pill risk-moderate';
+        }
+
+        function accessClass(level) {
+            const v = String(level || '').toUpperCase();
+            if (v === 'GRANTED') return 'access-pill access-granted';
+            if (v === 'PENDING') return 'access-pill access-pending';
+            return 'access-pill access-private';
+        }
+
+        function escapeHtml(text) {
+            return String(text || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/\"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        function inferCategoryFromText(text) {
+            const t = String(text || '').toLowerCase();
+            if (t.includes('cardio') || t.includes('stemi') || t.includes('myocard') || t.includes('heart')) return 'Cardiology';
+            if (t.includes('pneumonia') || t.includes('respirat') || t.includes('lung')) return 'Pulmonology';
+            if (t.includes('diabetes') || t.includes('hba1c') || t.includes('glucose')) return 'Endocrinology';
+            if (t.includes('ckd') || t.includes('kidney') || t.includes('renal') || t.includes('hypertension')) return 'Nephrology';
+            if (t.includes('depress') || t.includes('psychi') || t.includes('mood')) return 'Psychiatry';
+            return 'General';
+        }
+
+        function renderFitReport(record) {
+            const report = record?.report || {};
+            const ai = report?.aiReportFormat || {};
+            const actionPlan = Array.isArray(ai.actionPlan)
+                ? ai.actionPlan
+                : (Array.isArray(report.recommendations) ? report.recommendations : []);
+            const metrics = record?.metrics || {};
+
+            const metricRows = Object.entries(metrics).map(([k, v]) =>
+                `<div class="mini-kv"><strong>${escapeHtml(k)}</strong><br>${escapeHtml(v || '-')}</div>`
+            ).join('');
+
+            const actions = actionPlan.length
+                ? `<ul class="report-list">${actionPlan.map((x) => `<li>${escapeHtml(x)}</li>`).join('')}</ul>`
+                : '<div>No action plan available.</div>';
+
+            return `
+                <div class="report-head">
+                    <div>
+                        <div class="report-id">${escapeHtml(report.fitReportId || `FIT-REP-${record.publicId || 'NA'}`)}</div>
+                        <div style="font-size:13px;color:#5b6f86;">Created: ${escapeHtml(record.createdAt || '-')}</div>
+                    </div>
+                    <div>
+                        <span class="${riskClass(report.riskLevel || 'MODERATE')}">RISK: ${escapeHtml(report.riskLevel || '-')}</span>
+                        <span class="${accessClass(record.accessStatus || 'PRIVATE')}" style="margin-left:6px;">ACCESS: ${escapeHtml(record.accessStatus || '-')}</span>
+                    </div>
+                </div>
+
+                <div class="report-section">
+                    <h4>Overview</h4>
+                    <div>${escapeHtml(ai.overview || report.summary || 'No summary available.')}</div>
+                </div>
+
+                <div class="report-section">
+                    <h4>Risk Band</h4>
+                    <div>${escapeHtml(ai.riskBand || `${report.riskLevel || '-'} (score ${report.riskScore || '-'})`)}</div>
+                </div>
+
+                <div class="report-section">
+                    <h4>Action Plan</h4>
+                    ${actions}
+                </div>
+
+                <div class="report-section">
+                    <h4>Follow-up</h4>
+                    <div>${escapeHtml(ai.followUp || report.disclaimer || '-')}</div>
+                </div>
+
+                <div class="report-section">
+                    <h4>Metric Snapshot</h4>
+                    <div class="mini-grid">${metricRows || '<div class="mini-kv">No metrics available.</div>'}</div>
+                </div>
+            `;
+        }
+
+        function renderDoctorSearchResults(data) {
+            const doctors = Array.isArray(data?.doctors) ? data.doctors : [];
+            if (!doctors.length) {
+                return '<div class="report-section"><h4>Search Results</h4><div>No doctors found for current filters.</div></div>';
+            }
+
+            const rows = doctors.map((d) => `
+                <div class="item">
+                    <div class="item-head">
+                        <strong class="mono">${escapeHtml(d.id || '-')}</strong>
+                        <span class="risk-pill risk-low">Rating ${escapeHtml(d.rating || '-')}</span>
+                    </div>
+                    <div><strong>Name:</strong> ${escapeHtml(d.name || '-')}</div>
+                    <div><strong>Specialty:</strong> ${escapeHtml(d.specialty || '-')}</div>
+                    <div><strong>Category:</strong> ${escapeHtml(d.category || '-')}</div>
+                    <div><strong>Joined:</strong> ${escapeHtml(d.joinedAt || '-')}</div>
+                </div>
+            `).join('');
+
+            return `
+                <div class="report-section">
+                    <h4>Search Results</h4>
+                    <div class="sub">Found ${doctors.length} doctor(s)</div>
+                    <div class="list">${rows}</div>
+                </div>
+            `;
+        }
+
+        function renderRequestResponse(data) {
+            return `
+                <div class="report-section">
+                    <h4>Access Request Submitted</h4>
+                    <div class="mini-grid">
+                        <div class="mini-kv"><strong>Request ID</strong><br>${escapeHtml(data.requestId || '-')}</div>
+                        <div class="mini-kv"><strong>Status</strong><br>${escapeHtml(data.status || '-')}</div>
+                        <div class="mini-kv"><strong>FIT ID</strong><br>${escapeHtml(data.publicId || '-')}</div>
+                        <div class="mini-kv"><strong>Doctor ID</strong><br>${escapeHtml(data.doctorId || '-')}</div>
+                        <div class="mini-kv"><strong>Doctor Name</strong><br>${escapeHtml(data.doctorName || '-')}</div>
+                        <div class="mini-kv"><strong>Requested At</strong><br>${escapeHtml(data.requestedAt || '-')}</div>
+                    </div>
+                    <div class="report-section" style="margin-top:10px;">
+                        <h4>Note</h4>
+                        <div>${escapeHtml(data.note || '-')}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderHospitalSessionResponse(data) {
+            const hospital = data?.hospital || {};
+            const badge = data?.alreadyExists ? 'ALREADY EXISTS' : 'SAVED';
+            return `
+                <div class="report-section">
+                    <h4>Hospital Access Session ${badge}</h4>
+                    <div style="margin-bottom:8px;color:#4f6379;font-size:13px;">${escapeHtml(data?.message || '')}</div>
+                    <div class="mini-grid">
+                        <div class="mini-kv"><strong>Hospital Name</strong><br>${escapeHtml(hospital.hospitalName || '-')}</div>
+                        <div class="mini-kv"><strong>Hospital ID</strong><br>${escapeHtml(hospital.hospitalId || '-')}</div>
+                        <div class="mini-kv"><strong>Status</strong><br>${escapeHtml(data?.status || 'ACTIVE')}</div>
+                        <div class="mini-kv"><strong>Next Step</strong><br>Use Hospital Report Lookup</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderHospitalReport(data) {
+            const tests = Object.entries(data.medicalTests || {}).map(([k, v]) =>
+                `<div class="mini-kv"><strong>${escapeHtml(k)}</strong><br>${escapeHtml(v)}</div>`
+            ).join('');
+
+            const carePlan = Array.isArray(data.treatmentDone)
+                ? `<ul class="report-list">${data.treatmentDone.map((t) => `<li>${escapeHtml(t)}</li>`).join('')}</ul>`
+                : '<div>No treatment details found.</div>';
+
+            const keyFindings = Array.isArray(data.aiReportFormat?.keyFindings)
+                ? `<ul class="report-list">${data.aiReportFormat.keyFindings.map((x) => `<li>${escapeHtml(x)}</li>`).join('')}</ul>`
+                : '<div>No key findings available.</div>';
+
+            return `
+                <div class="report-head">
+                    <div>
+                        <div class="report-id">${escapeHtml(data.hospReportId || '-')}</div>
+                        <div style="font-size:13px;color:#5b6f86;">Generated: ${escapeHtml(data.generatedAt || '-')}</div>
+                    </div>
+                    <div>
+                        <span class="access-pill access-granted">${escapeHtml(data.hospitalAccessResponse?.sessionStatus || 'ACTIVE')}</span>
+                    </div>
+                </div>
+
+                <div class="report-section">
+                    <h4>Hospital Access Response</h4>
+                    <div>${escapeHtml(data.hospitalAccessResponse?.message || 'Hospital access verified.')}</div>
+                    ${data.hospitalAccessResponse?.warning ? `<div style="margin-top:8px;color:#92400e;font-size:13px;">${escapeHtml(data.hospitalAccessResponse.warning)}</div>` : ''}
+                </div>
+
+                <div class="report-section">
+                    <h4>Patient Summary</h4>
+                    <div class="mini-grid">
+                        <div class="mini-kv"><strong>Hospital</strong><br>${escapeHtml(data.hospitalName || '-')}</div>
+                        <div class="mini-kv"><strong>Personal ID</strong><br>${escapeHtml(data.personalId || '-')}</div>
+                        <div class="mini-kv"><strong>Patient Name</strong><br>${escapeHtml(data.patientName || '-')}</div>
+                        <div class="mini-kv"><strong>Diagnosis</strong><br>${escapeHtml(data.diagnosis || '-')}</div>
+                    </div>
+                </div>
+
+                <div class="report-section">
+                    <h4>Medical Tests</h4>
+                    <div class="mini-grid">${tests || '<div class="mini-kv">No test data.</div>'}</div>
+                </div>
+
+                <div class="report-section">
+                    <h4>Treatment Done</h4>
+                    ${carePlan}
+                </div>
+
+                <div class="report-section">
+                    <h4>AI Key Findings</h4>
+                    ${keyFindings}
+                </div>
+            `;
+        }
+
+        function renderHospitalDoctorResults(data) {
+            const doctors = Array.isArray(data?.doctors) ? data.doctors : [];
+            if (!doctors.length) {
+                return '<div class="report-section"><h4>Hospital Doctor Collaboration</h4><div>No doctors found for current scope/mode/query.</div></div>';
+            }
+
+            const rows = doctors.map((d) => `
+                <div class="item">
+                    <div class="item-head">
+                        <strong class="mono">${escapeHtml(d.id || '-')}</strong>
+                        <span class="risk-pill risk-low">Rating ${escapeHtml(d.rating || '-')}</span>
+                    </div>
+                    <div><strong>Name:</strong> ${escapeHtml(d.name || '-')}</div>
+                    <div><strong>Specialty:</strong> ${escapeHtml(d.specialty || '-')}</div>
+                    <div><strong>Scope:</strong> ${escapeHtml(d.scope || '-')} (${escapeHtml(d.country || '-')})</div>
+                    <div><strong>Mode:</strong> ${escapeHtml((d.interactionModes || []).join(', '))}</div>
+                    <div><strong>Collaboration:</strong> ${escapeHtml(d.collaborationLabel || '-')}</div>
+                    <div><strong>Diagnosis Match:</strong> ${d.recommendedForDiagnosis ? 'Yes' : 'No'}</div>
+                </div>
+            `).join('');
+
+            return `
+                <div class="report-section">
+                    <h4>Hospital Doctor Collaboration</h4>
+                    <div class="mini-grid">
+                        <div class="mini-kv"><strong>Diagnosis</strong><br>${escapeHtml(data.diagnosis || '-')}</div>
+                        <div class="mini-kv"><strong>Preferred Category</strong><br>${escapeHtml(data.preferredCategory || '-')}</div>
+                        <div class="mini-kv"><strong>Mode</strong><br>${escapeHtml(data.interactionMode || '-')}</div>
+                        <div class="mini-kv"><strong>Count</strong><br>${escapeHtml(data.count || 0)}</div>
+                    </div>
+                    <div class="list" style="margin-top:10px;">${rows}</div>
+                </div>
+            `;
+        }
+
+        // ============ LOCAL STORAGE PERSISTENCE FOR FORM DATA ============
+        const STORAGE_PREFIX = 'careflow_form_';
+        
+        function saveFormData() {
+            // Save all input, textarea, and select fields to localStorage
+            document.querySelectorAll('input, textarea, select').forEach((field) => {
+                if (field.id && field.type !== 'password') {
+                    const key = STORAGE_PREFIX + field.id;
+                    sessionStorage.setItem(key, field.value);
+                }
+            });
+        }
+
+        function restoreFormData() {
+            // Restore all saved form data from localStorage on page load
+            document.querySelectorAll('input, textarea, select').forEach((field) => {
+                if (field.id && field.type !== 'password') {
+                    const key = STORAGE_PREFIX + field.id;
+                    const saved = sessionStorage.getItem(key);
+                    if (saved !== null) {
+                        field.value = saved;
+                    }
+                }
+            });
+        }
+
+        function clearFormData() {
+            // Clear all saved form data
+            const keys = Object.keys(sessionStorage).filter(k => k.startsWith(STORAGE_PREFIX));
+            keys.forEach(k => sessionStorage.removeItem(k));
+            console.log('Form data cleared. Please manually refresh the page to see changes.');
+        }
+
+        // Auto-save form data whenever any input changes
+        document.addEventListener('change', saveFormData);
+        document.addEventListener('input', saveFormData);
+        document.addEventListener('blur', saveFormData, true);
+
+        // Restore form data when page loads
+        window.addEventListener('DOMContentLoaded', restoreFormData);
+        restoreFormData(); // Also call immediately in case DOMContentLoaded has already fired
+
+        {% if user_role == 'public' %}
+        document.querySelectorAll('.tab-btn').forEach((btn) => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach((x) => x.classList.remove('active'));
+                btn.classList.add('active');
+                const tab = btn.dataset.tab;
+                document.getElementById('tab-fitness').classList.toggle('hidden', tab !== 'fitness');
+                document.getElementById('tab-doctor-search').classList.toggle('hidden', tab !== 'doctor-search');
+                document.getElementById('tab-hospital').classList.toggle('hidden', tab !== 'hospital');
+                document.getElementById('tab-fit-lookup').classList.toggle('hidden', tab !== 'fit-lookup');
+                document.getElementById('tab-hospital-lookup').classList.toggle('hidden', tab !== 'hospital-lookup');
+                document.getElementById('tab-doctor-chat').classList.toggle('hidden', tab !== 'doctor-chat');
+                document.getElementById('tab-online-discussion').classList.toggle('hidden', tab !== 'online-discussion');
+                document.getElementById('tab-notifications').classList.toggle('hidden', tab !== 'notifications');
+                document.getElementById('tab-doctor-suggestions').classList.toggle('hidden', tab !== 'doctor-suggestions');
+                if (tab === 'doctor-suggestions') loadSuggestions();
+            });
+        });
+
+        let onlineSessions = [];
+
+        function currentOnlineSession(selectId) {
+            const publicId = document.getElementById(selectId).value;
+            return onlineSessions.find((s) => s.publicId === publicId) || null;
+        }
+
+        function renderOnlineDoctorInfo(sessionItem) {
+            if (!sessionItem) {
+                return '<div>No accepted doctor session loaded yet.</div>';
+            }
+            return `
+                <div class="report-section">
+                    <h4>Accepted Doctor Session</h4>
+                    <div class="mini-grid">
+                        <div class="mini-kv"><strong>FIT ID</strong><br>${escapeHtml(sessionItem.publicId || '-')}</div>
+                        <div class="mini-kv"><strong>Doctor ID</strong><br>${escapeHtml(sessionItem.doctorId || '-')}</div>
+                        <div class="mini-kv"><strong>Doctor</strong><br>${escapeHtml(sessionItem.doctorName || '-')}</div>
+                        <div class="mini-kv"><strong>Specialty</strong><br>${escapeHtml(sessionItem.specialty || '-')}</div>
+                        <div class="mini-kv"><strong>Meeting ID</strong><br>${escapeHtml(sessionItem.meetingId || '-')}</div>
+                        <div class="mini-kv"><strong>Granted At</strong><br>${escapeHtml(sessionItem.grantedAt || '-')}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderOnlineChat(messages) {
+            if (!messages || !messages.length) {
+                return '<div class="report-section"><div>No chat messages yet.</div></div>';
+            }
+            return messages.map((m) => `
+                <div class="item" style="margin-bottom:8px;">
+                    <div class="item-head">
+                        <strong>${escapeHtml(m.role === 'doctor' ? (m.author || 'Doctor') : 'You')}</strong>
+                        <span>${escapeHtml(m.time || '-')}</span>
+                    </div>
+                    <div>${escapeHtml(m.message || '')}</div>
+                </div>
+            `).join('');
+        }
+
+        async function refreshOnlineSessions() {
+            const data = await getJson('/api/prototype/public/online-sessions');
+            onlineSessions = data.sessions || [];
+            const options = '<option value="">Select granted FIT ID</option>' + onlineSessions.map((s) => `<option value="${s.publicId}">${s.publicId} - ${s.doctorName}</option>`).join('');
+
+            const chatSel = document.getElementById('chatPublicId');
+            const discussionSel = document.getElementById('discussionPublicId');
+            const chatCurrent = chatSel.value;
+            const discussionCurrent = discussionSel.value;
+
+            chatSel.innerHTML = options;
+            discussionSel.innerHTML = options;
+
+            if (chatCurrent && onlineSessions.some((s) => s.publicId === chatCurrent)) {
+                chatSel.value = chatCurrent;
+            }
+            if (discussionCurrent && onlineSessions.some((s) => s.publicId === discussionCurrent)) {
+                discussionSel.value = discussionCurrent;
+            }
+
+            const chatSessionItem = currentOnlineSession('chatPublicId');
+            document.getElementById('chatDoctorInfo').innerHTML = renderOnlineDoctorInfo(chatSessionItem);
+
+            const discussionSessionItem = currentOnlineSession('discussionPublicId');
+            document.getElementById('discussionDoctorInfo').innerHTML = renderOnlineDoctorInfo(discussionSessionItem);
+            if (discussionSessionItem && discussionSessionItem.meetingId) {
+                document.getElementById('meetingIdInput').value = discussionSessionItem.meetingId;
+            }
+
+            if (!chatSessionItem) {
+                document.getElementById('onlineChatLog').innerHTML = '<div class="report-section"><div>Chat will appear here after selecting accepted FIT ID.</div></div>';
+            }
+        }
+
+        function currentMetricsPayload() {
+            return {
+                provider: document.getElementById('provider').value,
+                weight: document.getElementById('weight').value,
+                restingHeartRate: document.getElementById('restingHeartRate').value,
+                bloodPressure: document.getElementById('bloodPressure').value,
+                sleepHours: document.getElementById('sleepHours').value,
+                stepsPerDay: document.getElementById('stepsPerDay').value,
+                exerciseMinutes: document.getElementById('exerciseMinutes').value,
+                waterIntake: document.getElementById('waterIntake').value,
+                fastingGlucose: document.getElementById('fastingGlucose').value,
+            };
+        }
+
+        function renderSnapshot(record) {
+            const vals = [
+                record.publicId || '-',
+                record.report?.riskLevel || '-',
+                record.accessStatus || '-',
+                record.report?.aiSource || '-',
+            ];
+            document.querySelectorAll('#snapshotGrid .v').forEach((node, idx) => { node.textContent = vals[idx]; });
+
+            const risk = record.report?.riskLevel || '-';
+            const access = record.accessStatus || '-';
+            const riskPill = document.getElementById('riskPill');
+            const accessPill = document.getElementById('accessPill');
+            riskPill.className = riskClass(risk);
+            accessPill.className = accessClass(access);
+            riskPill.textContent = 'Risk: ' + risk;
+            accessPill.textContent = 'Access: ' + access;
+
+            document.getElementById('summaryOut').innerHTML = renderFitReport(record);
+            if (record.publicId) {
+                document.getElementById('requestPublicId').value = record.publicId;
+                document.getElementById('lookupId').value = record.publicId;
+            }
+        }
+
+        document.getElementById('saveHospitalSessionBtn').addEventListener('click', async () => {
+            const name = document.getElementById('hospitalSessionName').value;
+            const id = document.getElementById('hospitalSessionId').value;
+            const out = document.getElementById('hospitalSessionOut');
+            out.textContent = 'Saving hospital session...';
+            try {
+                const data = await postJson('/api/prototype/public/save-hospital-session', {
+                    hospitalName: name,
+                    hospitalId: id,
+                });
+                document.getElementById('hospitalName').value = data?.hospital?.hospitalName || name;
+                document.getElementById('hospitalId').value = data?.hospital?.hospitalId || id;
+                out.innerHTML = renderHospitalSessionResponse(data);
+            } catch (e) {
+                out.textContent = 'Error: ' + e.message;
+            }
+        });
+
+        function renderRecords(records) {
+            const holder = document.getElementById('recordList');
+            if (!records.length) {
+                holder.innerHTML = '<div class="item">No records yet.</div>';
+                return;
+            }
+            holder.innerHTML = records.map((r) => `
+                <div class="item">
+                    <div class="item-head">
+                        <strong class="mono">${r.publicId}</strong>
+                        <span class="${accessClass(r.accessStatus)}">${r.accessStatus}</span>
+                    </div>
+                    <div>Risk: <strong>${r.riskLevel || '-'}</strong></div>
+                    <div>Doctor: <strong>${r.doctorAssigned || 'Not assigned'}</strong></div>
+                    <div>Created: ${r.createdAt}</div>
+                </div>
+            `).join('');
+        }
+
+        async function refreshRecords() {
+            const data = await getJson('/api/prototype/public/my-records');
+            renderRecords(data.records || []);
+            const cat = document.getElementById('docCategory');
+            cat.innerHTML = '<option value="all">All</option>' + (data.doctorCategories || []).map((c) => `<option value="${c}">${c}</option>`).join('');
+        }
+
+        document.getElementById('generateBtn').addEventListener('click', async () => {
+            const out = document.getElementById('summaryOut');
+            out.textContent = 'Generating FIT report...';
+            try {
+                const rec = await postJson('/api/prototype/public/generate-report', currentMetricsPayload());
+                renderSnapshot(rec);
+                await refreshRecords();
+            } catch (e) {
+                out.textContent = 'Error: ' + e.message;
+            }
+        });
+
+        document.getElementById('refreshBtn').addEventListener('click', async () => {
+            try {
+                await refreshRecords();
+                document.getElementById('summaryOut').textContent = 'FIT IDs refreshed.';
+            } catch (e) {
+                document.getElementById('summaryOut').textContent = 'Error: ' + e.message;
+            }
+        });
+
+        document.getElementById('doctorSearchBtn').addEventListener('click', async () => {
+            const q = encodeURIComponent(document.getElementById('docQuery').value);
+            const c = encodeURIComponent(document.getElementById('docCategory').value);
+            const s = encodeURIComponent(document.getElementById('docSort').value);
+            const out = document.getElementById('doctorSearchOut');
+            out.textContent = 'Searching doctors...';
+            try {
+                const data = await getJson(`/api/prototype/public/search-doctors?q=${q}&category=${c}&sort=${s}`);
+                out.innerHTML = renderDoctorSearchResults(data);
+            } catch (e) {
+                out.textContent = 'Error: ' + e.message;
+            }
+        });
+
+        document.getElementById('requestBtn').addEventListener('click', async () => {
+            const out = document.getElementById('requestOut');
+            out.textContent = 'Submitting doctor access request...';
+            try {
+                const data = await postJson('/api/prototype/public/request-access', {
+                    publicId: document.getElementById('requestPublicId').value,
+                    doctorId: document.getElementById('doctorId').value,
+                    note: document.getElementById('requestNote').value,
+                });
+                out.innerHTML = renderRequestResponse(data);
+                await refreshRecords();
+            } catch (e) {
+                out.textContent = 'Error: ' + e.message;
+            }
+        });
+
+        document.getElementById('lookupBtn').addEventListener('click', async () => {
+            const out = document.getElementById('lookupOut');
+            out.textContent = 'Loading FIT report...';
+            try {
+                const data = await getJson('/api/prototype/public/report/' + encodeURIComponent(document.getElementById('lookupId').value));
+                out.innerHTML = renderFitReport(data);
+            } catch (e) {
+                out.textContent = 'Error: ' + e.message;
+            }
+        });
+
+        let currentHospitalReport = null;
+
+        document.getElementById('hospitalFetchBtn').addEventListener('click', async () => {
+            const out = document.getElementById('hospitalOut');
+            out.textContent = 'Fetching hospital report...';
+            try {
+                const data = await postJson('/api/prototype/public/hospital-report', {
+                    hospitalName: document.getElementById('hospitalName').value,
+                    hospitalId: document.getElementById('hospitalId').value,
+                    personalId: document.getElementById('personalId').value,
+                });
+                currentHospitalReport = data;
+                out.innerHTML = renderHospitalReport(data);
+                document.getElementById('hospitalDoctorOut').innerHTML = '<div class="report-section"><h4>Ready</h4><div>Hospital report loaded. Click search to find collaboration doctors for this diagnosis.</div></div>';
+            } catch (e) {
+                currentHospitalReport = null;
+                const payload = e.data || {};
+                const msg = String(e.message || 'Request failed');
+                if (payload.expectedHospitalName) document.getElementById('hospitalName').value = payload.expectedHospitalName;
+                if (payload.expectedHospitalId) document.getElementById('hospitalId').value = payload.expectedHospitalId;
+                if (payload.hospitalName) document.getElementById('hospitalName').value = payload.hospitalName;
+                if (payload.hospitalId) document.getElementById('hospitalId').value = payload.hospitalId;
+
+                const list = Array.isArray(payload.availablePersonalIds) && payload.availablePersonalIds.length
+                    ? `<div style="margin-top:8px;font-size:13px;color:#334155;">Available IDs: ${payload.availablePersonalIds.map((x) => escapeHtml(x)).join(', ')}</div>`
+                    : '';
+                out.innerHTML = `
+                    <div class="report-section">
+                        <h4>Unable To Load Report</h4>
+                        <div>${escapeHtml(msg)}</div>
+                        <div style="margin-top:8px;color:#4f6379;font-size:13px;">Tip: Use matching hospital and personal ID combination.</div>
+                        ${list}
+                    </div>
+                `;
+                document.getElementById('hospitalDoctorOut').innerHTML = '<div class="report-section"><h4>Missing Report</h4><div>Load hospital report first.</div></div>';
+            }
+        });
+
+        document.getElementById('hospitalDoctorSearchBtn').addEventListener('click', async () => {
+            const out = document.getElementById('hospitalDoctorOut');
+            if (!currentHospitalReport) {
+                out.innerHTML = '<div class="report-section"><h4>Missing Report</h4><div>Load hospital report first.</div></div>';
+                return;
+            }
+
+            const q = encodeURIComponent(document.getElementById('hospitalDocQuery').value || '');
+            const scope = encodeURIComponent(document.getElementById('hospitalDocScope').value || 'all');
+            const mode = encodeURIComponent(document.getElementById('hospitalDocMode').value || 'treatment');
+            const diagnosis = encodeURIComponent(currentHospitalReport.diagnosis || '');
+
+            out.textContent = 'Searching collaboration doctors...';
+            try {
+                const data = await getJson(`/api/prototype/public/hospital-doctors?q=${q}&scope=${scope}&mode=${mode}&diagnosis=${diagnosis}`);
+                out.innerHTML = renderHospitalDoctorResults(data);
+            } catch (e) {
+                out.textContent = 'Error: ' + e.message;
+            }
+        });
+
+        async function refreshNotifications() {
+            const data = await getJson('/api/prototype/public/notifications');
+            const list = document.getElementById('notiList');
+            if (!data.notifications.length) {
+                list.innerHTML = '<div class="item">No notifications yet.</div>';
+                return;
+            }
+            list.innerHTML = data.notifications.map((n) => `
+                <div class="item">
+                    <div class="item-head">
+                        <strong>${n.type}</strong>
+                        <span class="${accessClass(n.status)}">${n.status}</span>
+                    </div>
+                    <div><strong>${n.publicId || '-'}</strong></div>
+                    <div>${n.message}</div>
+                    <div>${n.createdAt || '-'}</div>
+                    ${n.doctorNote ? `<div>Doctor note: ${n.doctorNote}</div>` : ''}
+                </div>
+            `).join('');
+        }
+
+        document.getElementById('refreshNotiBtn').addEventListener('click', async () => {
+            try {
+                await refreshNotifications();
+            } catch (e) {
+                document.getElementById('notiList').innerHTML = '<div class="item">Error: ' + e.message + '</div>';
+            }
+        });
+
+        async function loadSuggestions() {
+            const holder = document.getElementById('suggestionsList');
+            holder.innerHTML = '<div class="item">Loading doctor suggestions...</div>';
+            const data = await getJson('/api/prototype/public/my-suggestions');
+            const suggestions = data.suggestions || [];
+            if (!suggestions.length) {
+                holder.innerHTML = '<div class="item">No doctor suggestions yet.</div>';
+                return;
+            }
+            holder.innerHTML = suggestions.map((s) => `
+                <div class="item">
+                    <div class="item-head">
+                        <strong class="mono">${escapeHtml(s.suggestionId || '-')}</strong>
+                        <span class="access-pill access-granted">ACTIVE</span>
+                    </div>
+                    <div><strong>FIT ID:</strong> ${escapeHtml(s.publicId || '-')}</div>
+                    <div><strong>Doctor:</strong> ${escapeHtml(s.doctorName || '-')} (${escapeHtml(s.doctorId || '-')})</div>
+                    <div><strong>Specialty:</strong> ${escapeHtml(s.doctorSpecialty || '-')}</div>
+                    <div><strong>Category:</strong> ${escapeHtml(s.category || '-')}</div>
+                    <div><strong>Treatment Plan:</strong> ${escapeHtml(s.treatmentPlan || '-')}</div>
+                    <div><strong>Medications:</strong> ${escapeHtml(s.medications || '-')}</div>
+                    <div><strong>Follow-up Date:</strong> ${escapeHtml(s.followupDate || '-')}</div>
+                    <div><strong>Sent At:</strong> ${escapeHtml(s.sentAt || '-')}</div>
+                </div>
+            `).join('');
+        }
+
+        document.getElementById('refreshSuggestionsBtn').addEventListener('click', async () => {
+            try {
+                await loadSuggestions();
+            } catch (e) {
+                document.getElementById('suggestionsList').innerHTML = '<div class="item">Error: ' + escapeHtml(e.message) + '</div>';
+            }
+        });
+
+        document.getElementById('refreshChatSessionsBtn').addEventListener('click', async () => {
+            try {
+                await refreshOnlineSessions();
+            } catch (e) {
+                document.getElementById('chatDoctorInfo').innerHTML = '<div class="report-section"><div>Error: ' + escapeHtml(e.message) + '</div></div>';
+            }
+        });
+
+        document.getElementById('refreshDiscussionSessionsBtn').addEventListener('click', async () => {
+            try {
+                await refreshOnlineSessions();
+            } catch (e) {
+                document.getElementById('discussionDoctorInfo').innerHTML = '<div class="report-section"><div>Error: ' + escapeHtml(e.message) + '</div></div>';
+            }
+        });
+
+        document.getElementById('chatPublicId').addEventListener('change', () => {
+            const sessionItem = currentOnlineSession('chatPublicId');
+            document.getElementById('chatDoctorInfo').innerHTML = renderOnlineDoctorInfo(sessionItem);
+            document.getElementById('onlineChatLog').innerHTML = '<div class="report-section"><div>Chat will appear here after sending first message.</div></div>';
+        });
+
+        document.getElementById('discussionPublicId').addEventListener('change', () => {
+            const sessionItem = currentOnlineSession('discussionPublicId');
+            document.getElementById('discussionDoctorInfo').innerHTML = renderOnlineDoctorInfo(sessionItem);
+            if (sessionItem && sessionItem.meetingId) {
+                document.getElementById('meetingIdInput').value = sessionItem.meetingId;
+            }
+        });
+
+        document.getElementById('sendOnlineChatBtn').addEventListener('click', async () => {
+            const out = document.getElementById('onlineChatLog');
+            const sessionItem = currentOnlineSession('chatPublicId');
+            if (!sessionItem) {
+                out.innerHTML = '<div class="report-section"><div>Select granted FIT ID first.</div></div>';
+                return;
+            }
+            const message = document.getElementById('onlineChatInput').value;
+            if (!String(message || '').trim()) {
+                out.innerHTML = '<div class="report-section"><div>Type a message first.</div></div>';
+                return;
+            }
+            out.innerHTML = '<div class="report-section"><div>Sending message to doctor...</div></div>';
+            try {
+                const data = await postJson('/api/prototype/public/online-chat', {
+                    publicId: sessionItem.publicId,
+                    message,
+                    provider: document.getElementById('provider')?.value || 'grok',
+                });
+                document.getElementById('onlineChatInput').value = '';
+                out.innerHTML = renderOnlineChat(data.messages || []);
+                out.scrollTop = out.scrollHeight;
+            } catch (e) {
+                out.innerHTML = '<div class="report-section"><div>Error: ' + escapeHtml(e.message) + '</div></div>';
+            }
+        });
+
+        document.getElementById('connectMeetingBtn').addEventListener('click', async () => {
+            const out = document.getElementById('meetingConnectOut');
+            const sessionItem = currentOnlineSession('discussionPublicId');
+            if (!sessionItem) {
+                out.innerHTML = '<div class="report-section"><div>Select granted FIT ID first.</div></div>';
+                return;
+            }
+            const meetingId = document.getElementById('meetingIdInput').value;
+            out.innerHTML = '<div class="report-section"><div>Connecting to online consultation...</div></div>';
+            try {
+                const data = await postJson('/api/prototype/public/connect-online-meeting', {
+                    publicId: sessionItem.publicId,
+                    meetingId,
+                });
+                out.innerHTML = `
+                    <div class="report-section">
+                        <h4>Connected</h4>
+                        <div>${escapeHtml(data.message || '')}</div>
+                        <div style="margin-top:8px;"><strong>Doctor:</strong> ${escapeHtml(data.doctorName || '-')}</div>
+                        <div><strong>Meeting ID:</strong> ${escapeHtml(data.meetingId || '-')}</div>
+                        <div style="margin-top:8px;"><a href="${escapeHtml(data.meetingUrl || '#')}" target="_blank" rel="noopener">Open Video Consultation Link</a></div>
+                    </div>
+                `;
+            } catch (e) {
+                out.innerHTML = '<div class="report-section"><div>Error: ' + escapeHtml(e.message) + '</div></div>';
+            }
+        });
+
+        refreshRecords().catch(() => {});
+        refreshNotifications().catch(() => {});
+        refreshOnlineSessions().catch(() => {});
+        {% else %}
+        function renderQueue(items) {
+            const holder = document.getElementById('queueList');
+            if (!items.length) {
+                holder.innerHTML = '<div class="item">No pending requests.</div>';
+                return;
+            }
+            holder.innerHTML = items.map((item) => `
+                <div class="item">
+                    <div class="item-head">
+                        <strong class="mono">${item.publicId}</strong>
+                        <span class="${accessClass(item.status)}">${item.status}</span>
+                    </div>
+                    <div>Requested doctor: ${item.doctorName} (${item.doctorId})</div>
+                    <div>Patient: ${item.patientEmail}</div>
+                    <div>Risk: ${item.riskLevel || '-'}</div>
+                    <div>Note: ${item.note}</div>
+                    <div class="row"><button class="secondary use-queue-fit" data-fit="${escapeHtml(item.publicId || '')}" data-doc="${escapeHtml(item.doctorId || '')}">Use This FIT</button></div>
+                </div>
+            `).join('');
+        }
+
+        async function refreshQueue() {
+            const data = await getJson('/api/prototype/doctor/access-queue');
+            renderQueue(data.requests || []);
+        }
+
+        document.getElementById('docBtn').addEventListener('click', async () => {
+            const out = document.getElementById('docOut');
+            out.textContent = 'Generating...';
+            try {
+                const data = await postJson('/api/prototype/doctor-assist', {
+                    provider: document.getElementById('docProvider').value,
+                    doctorName: document.getElementById('doctorName').value,
+                    caseNote: document.getElementById('docCase').value,
+                });
+                out.textContent = pretty(data);
+            } catch (e) {
+                out.textContent = 'Error: ' + e.message;
+            }
+        });
+
+        document.getElementById('queueRefreshBtn').addEventListener('click', async () => {
+            const out = document.getElementById('grantOut');
+            out.textContent = 'Refreshing queue...';
+            try {
+                await refreshQueue();
+                out.textContent = 'Queue refreshed.';
+            } catch (e) {
+                out.textContent = 'Error: ' + e.message;
+            }
+        });
+
+        document.getElementById('grantBtn').addEventListener('click', async () => {
+            const out = document.getElementById('grantOut');
+            out.textContent = 'Granting...';
+            try {
+                const data = await postJson('/api/prototype/doctor/grant-access', {
+                    publicId: document.getElementById('grantPublicId').value,
+                    onlineMeetingId: document.getElementById('grantMeetingId').value,
+                    doctorNote: document.getElementById('doctorNote').value,
+                });
+                out.textContent = pretty(data);
+                await refreshQueue();
+            } catch (e) {
+                out.textContent = 'Error: ' + e.message;
+            }
+        });
+
+        document.getElementById('updateMeetingBtn').addEventListener('click', async () => {
+            const out = document.getElementById('meetingUpdateOut');
+            out.textContent = 'Saving meeting session ID...';
+            try {
+                const data = await postJson('/api/prototype/doctor/update-meeting-session', {
+                    publicId: document.getElementById('doctorMeetingPublicId').value,
+                    meetingId: document.getElementById('doctorMeetingId').value,
+                });
+                out.textContent = pretty(data);
+            } catch (e) {
+                out.textContent = 'Error: ' + e.message;
+            }
+        });
+
+        document.getElementById('doctorLookupBtn').addEventListener('click', async () => {
+            const out = document.getElementById('doctorLookupOut');
+            out.textContent = 'Loading...';
+            try {
+                const data = await getJson('/api/prototype/public/report/' + encodeURIComponent(document.getElementById('doctorLookupId').value));
+                out.textContent = pretty(data);
+                const fitId = document.getElementById('doctorLookupId').value;
+                if (fitId) {
+                    document.getElementById('grantPublicId').value = fitId;
+                    document.getElementById('doctorMeetingPublicId').value = fitId;
+                    document.getElementById('docAnalyzeId').value = fitId;
+                    document.getElementById('treatmentPublicId').value = fitId;
+                }
+                const diag = data?.report?.summary || data?.report?.aiReportFormat?.overview || '';
+                document.getElementById('treatmentCategory').value = inferCategoryFromText(diag);
+            } catch (e) {
+                out.textContent = 'Error: ' + e.message;
+            }
+        });
+
+        document.getElementById('queueList').addEventListener('click', (ev) => {
+            const btn = ev.target.closest('.use-queue-fit');
+            if (!btn) return;
+            const fitId = btn.getAttribute('data-fit') || '';
+            const docId = btn.getAttribute('data-doc') || '';
+            document.getElementById('doctorLookupId').value = fitId;
+            document.getElementById('grantPublicId').value = fitId;
+            document.getElementById('doctorMeetingPublicId').value = fitId;
+            document.getElementById('docAnalyzeId').value = fitId;
+            document.getElementById('treatmentPublicId').value = fitId;
+            if (docId) document.getElementById('treatmentDoctorId').value = docId;
+            document.getElementById('grantOut').textContent = `Workflow linked to ${fitId}. You can now grant/analyze/treat.`;
+        });
+
+            const docAnalyzeBtn = document.getElementById('docAnalyzeBtn');
+            if (docAnalyzeBtn) docAnalyzeBtn.addEventListener('click', async () => {
+                const out = document.getElementById('docAnalyzeOut');
+                out.textContent = 'Analyzing report with AI...';
+                try {
+                    const data = await postJson('/api/prototype/doctor/analyze-report', {
+                        publicId: document.getElementById('docAnalyzeId').value,
+                        provider: document.getElementById('docAnalyzeProvider').value,
+                    });
+                    out.innerHTML = `<div style="white-space:pre-wrap;font-size:12px;">${pretty(data)}</div>`;
+                } catch (e) {
+                    out.textContent = 'Error: ' + e.message;
+                }
+            });
+
+            const sendTreatmentBtn = document.getElementById('sendTreatmentBtn');
+            if (sendTreatmentBtn) sendTreatmentBtn.addEventListener('click', async () => {
+                const out = document.getElementById('treatmentSendOut');
+                out.textContent = 'Sending treatment suggestion...';
+                try {
+                    const data = await postJson('/api/prototype/doctor/send-treatment-suggestion', {
+                        publicId: document.getElementById('treatmentPublicId').value,
+                        doctorId: document.getElementById('treatmentDoctorId').value,
+                        category: document.getElementById('treatmentCategory').value,
+                        treatmentPlan: document.getElementById('treatmentPlan').value,
+                        medications: document.getElementById('treatmentMedications').value,
+                        followupDate: document.getElementById('treatmentFollowup').value,
+                    });
+                    out.innerHTML = `<div style="color:green;"><strong>Treatment suggestion sent successfully.</strong><br/>${pretty(data)}</div>`;
+                    document.getElementById('treatmentCategory').value = '';
+                    document.getElementById('treatmentPlan').value = '';
+                    document.getElementById('treatmentMedications').value = '';
+                    document.getElementById('treatmentFollowup').value = '';
+                } catch (e) {
+                    out.textContent = 'Error: ' + e.message;
+                }
+            });
+
+        refreshQueue().catch(() => {});
+        {% endif %}
+    </script>
+</body>
+</html>
