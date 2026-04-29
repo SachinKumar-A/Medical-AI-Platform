@@ -7,149 +7,103 @@ email: sachinkumar31a@gmail.com
 pass: hello@2025
 
 
----
-title: Pneumonia Detection System
-emoji: 🏥
-colorFrom: blue
-colorTo: green
-sdk: docker
-pinned: false
-app_file: app.py
----
+🏥 Medical AI Platform — Prototype
+An integrated AI-powered medical ecosystem built with Large Language Models (LLMs). This platform serves doctors, patients, students, and researchers through a unified intelligent interface powered by Google Gemini and Groq AI.
 
-# 🏥 Pneumonia Detection System
+Status Python Flask AI
 
-AI-assisted chest X-ray screening system using DenseNet121 for early pneumonia detection support.
+🎯 What This Platform Does
+This prototype is a 4-sided Medical AI Ecosystem:
 
-![Status](https://img.shields.io/badge/status-active-success.svg)
-![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)
-![TensorFlow](https://img.shields.io/badge/tensorflow-2.10%2B-orange.svg)
+User Type	What They Get
+🩺 Doctors	AI-assisted case analysis, symptom evaluation, patient report summaries
+🧑‍🤝‍🧑 Patients	Health queries, medication info, appointment tracking
+🎓 Students	Medical case studies, drug explainers, anatomy Q&A
+🔬 Researchers	Drug repurposing insights, protocol generation, literature assistance
+✨ Key Features
+AI Medical Analysis — Describe symptoms or upload an X-ray description; the AI gives a structured differential diagnosis
+Multi-Portal System — Separate dashboards for doctors, patients, students, and researchers
+AI Chatbot Assistant — Context-aware conversational health assistant (Gemini-powered)
+Drug Search & Explainer — Search any drug for mechanism, dosage, side effects, and interactions
+Medical Report Generation — Auto-generate patient-ready summaries and structured reports
+User Authentication — Secure login/register with session management (SQLite)
+Dark Mode UI — Modern, hospital-grade responsive interface
+🧠 AI Architecture
+This prototype uses LLM-based inference (not a trained deep learning model):
 
-## 🎯 Features
+User Input (Text / Query)
+        ↓
+  Flask Backend (prototype_app.py)
+        ↓
+  ┌─────────────┬──────────────┐
+  │ Google Gemini│   Groq AI   │
+  │  (primary)   │  (fallback) │
+  └─────────────┴──────────────┘
+        ↓
+  Structured Medical Response
+        ↓
+  HTML/CSS/JS Frontend (Templates)
+Primary LLM: Google Gemini (gemini-1.5-flash)
+Secondary LLM: Groq (llama3-70b-8192)
+No GPU required — fully cloud-based inference
+🚀 Quick Start
+Prerequisites
+Python 3.10+
+Google Gemini API Key (get one here)
+Groq API Key (get one here)
+Installation
+# Clone the repository
+git clone https://github.com/SachinKumar-A/Medical-AI-Platform.git
+cd Medical-AI-Platform
 
-- **AI-Powered Analysis**: DenseNet121 model with 97.7% validation accuracy
-- **Patient Management**: Track multiple scans per patient ID
-- **CSV Reporting**: Download complete diagnostic reports
-- **Professional UI**: Hospital-grade web interface
-- **Real-time Predictions**: ~2-3 second analysis time
-
-## 📊 Model Performance
-
-- **Validation Accuracy**: 97.70%
-- **Test Accuracy**: 84.13%
-- **Architecture**: DenseNet121 (pre-trained on ImageNet)
-- **Training**: 30 epochs with early stopping
-- **Dataset**: 5,216 chest X-ray images
-
-## 🚀 Quick Start
-
-### Prerequisites
-
-- Python 3.10+
-- GPU (optional, recommended for faster inference)
-- 4GB+ RAM
-
-### Installation
-
-1. Clone the repository:
-```bash
-git clone https://github.com/YOUR_USERNAME/pneumonia-detection.git
-cd pneumonia-detection
-```
-
-2. Create virtual environment:
-```bash
+# Create virtual environment
 python -m venv .venv
-.venv\Scripts\activate  # Windows
+.venv\Scripts\activate      # Windows
 # source .venv/bin/activate  # Linux/Mac
-```
 
-3. Install dependencies:
-```bash
+# Install dependencies
 pip install -r requirements.txt
-```
+Configuration
+Create a .env file in the root directory:
 
-4. Download the dataset (not included in repo):
-   - Place chest X-ray images in `chest_xray/` folder
-   - Structure: `chest_xray/train/`, `chest_xray/test/`, `chest_xray/val/`
+GEMINI_API_KEY=your_gemini_api_key_here
+GROQ_API_KEY=your_groq_api_key_here
+FLASK_SECRET_KEY=your_secret_key_here
+Run
+python prototype_app.py
+Open browser at: http://localhost:5000
 
-### Usage
+📁 Project Structure
+Medical-AI-Platform/
+├── prototype_app.py          # Main Flask application (all routes + AI logic)
+├── requirements.txt          # Python dependencies
+├── prototype_users.db        # SQLite user database
+├── templates/                # Jinja2 HTML templates
+│   ├── index.html            # Landing page
+│   ├── dashboard.html        # Main portal dashboard
+│   ├── chat.html             # AI chatbot interface
+│   ├── drug_search.html      # Drug information search
+│   └── ...                   # Other portal pages
+├── hackathon - ui/           # UI mockups and design assets
+├── ADDITIONAL DETAILS/       # Project documentation and diagrams
+└── vercel.json               # Vercel deployment configuration
+🔧 Technology Stack
+Layer	Technology
+Backend	Flask (Python 3.10+)
+Primary AI	Google Gemini API
+Secondary AI	Groq API (LLaMA 3)
+Database	SQLite (via Flask session)
+Frontend	HTML5, CSS3, Vanilla JavaScript
+Auth	Flask-Login + bcrypt
+Deployment	Vercel (Python runtime)
+⚠️ Disclaimer
+This platform is for educational, research, and demonstration purposes only. All AI-generated medical information must be reviewed by a qualified healthcare professional before use in any clinical context.
 
-#### Run Web Application
-```bash
-python webapp_final.py
-```
-Open browser at: `http://localhost:5000`
 
-#### Train Model
-```bash
-python train_model.py
-```
+🏆 Hackathon
+Built for Google Build with AI — Solution Challenge 2026 (Hack2Skill India)
 
-#### Evaluate Model
-```bash
-python evaluate_model.py
-```
 
-#### CLI Prediction
-```bash
-python predict.py path/to/xray.jpg
-```
 
-## 📁 Project Structure
-
-```
-pneumonia-detection/
-├── webapp_final.py          # Flask web application
-├── train_model.py           # Model training script
-├── evaluate_model.py        # Model evaluation script
-├── predict.py               # CLI prediction tool
-├── model2result.keras       # Trained model (81.83 MB)
-├── templates/
-│   └── index.html          # Frontend UI
-├── requirements.txt         # Python dependencies
-└── training_log_gpu.txt    # Training history
-```
-
-## 🔧 Technology Stack
-
-- **Backend**: Flask (Python)
-- **ML Framework**: TensorFlow/Keras
-- **Model**: DenseNet121
-- **Frontend**: HTML5, CSS3, JavaScript
-- **Image Processing**: PIL/Pillow
-
-## 📈 Training Details
-
-- **Optimizer**: Adam (learning rate: 0.001)
-- **Loss**: Binary Cross-Entropy
-- **Batch Size**: 16
-- **Data Augmentation**: Random flip, rotation, zoom, translation
-- **Hardware**: NVIDIA RTX 3050 (6GB VRAM)
-- **Training Time**: ~6 hours (30 epochs)
-
-## ⚠️ Disclaimer
-
-This tool is for **educational and research purposes only**. It should be used as a triage support system alongside professional radiologist review. Do not use for clinical decision-making without proper medical supervision.
-
-## 👥 Team
-
-- **Sachin Kumar A** - Developer
-- **R Srinivas** - R&D and Documentation
-- **R Ranjitha** - R&D
-
-## 📄 License
-
-MIT License - see LICENSE file for details
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## 📧 Contact
-
+📧 Contact
 For questions or collaborations, please open an issue on GitHub.
-
----
-
-**Note**: The trained model file (`model2result.keras`) is included in this repository. The dataset is not included due to size constraints.
