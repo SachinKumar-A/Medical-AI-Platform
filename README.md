@@ -2,6 +2,9 @@ note: [https://vercel.com/sksandysachin242-6675s-projects/medical-ai-platform](h
 the app live in this link 
 this is for(Hack2skill google)
 
+And the api key problem in deployment you can verify its working in video attacted 
+email: sachinkumar31a@gmail.com
+pass: hello@2025
 
 
 ---
