@@ -1,3 +1,9 @@
+note: https://vercel.com/sksandysachin242-6675s-projects/medical-ai-platform
+the app live in this link 
+this is for(Hack2skill google)
+
+
+
 ---
 title: Pneumonia Detection System
 emoji: 🏥
