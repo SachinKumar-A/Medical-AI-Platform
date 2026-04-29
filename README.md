@@ -1,4 +1,4 @@
-note: https://vercel.com/sksandysachin242-6675s-projects/medical-ai-platform
+note: [https://vercel.com/sksandysachin242-6675s-projects/medical-ai-platform](https://medical-ai-platform-rosy.vercel.app/)
 the app live in this link 
 this is for(Hack2skill google)
 
